@@ -1,5 +1,5 @@
 # LMNtal ShapeType
-This repository contains the prototype implementation of LMNtal ShapeType, a static type checking framework for a graph rewriting language LMNtal, which we presented at the paper "Engineering Grammar-based Type Checking for Graph Rewriting Languages".
+This repository contains the prototype implementation of LMNtal ShapeType, a static type checking framework for a graph rewriting language LMNtal, which we presented in the paper "Engineering Grammar-based Type Checking for Graph Rewriting Languages".
 
 ## Preliminary
 To run the prototype, you need to install Node.js and its package manager `npm`.
@@ -66,7 +66,7 @@ For example, try this command to perform rule type checking of a skip list:
 ```
 
 ### Known issue about graph type checking and makeshift
-Current implementation may not work well for graph type checking of indexed types. In this case, you can use rule type checking instead.
+The current implementation may not work well for graph type checking of indexed types. In this case, you can use rule type checking instead.
 
 For example, if you want to check that the graph `R=b(b(r(l,l),l),b(l,l))` has the type `rbtree(R)`, you can run the rule type checking of this rule:
 ```
@@ -74,7 +74,7 @@ rbtree(R) :- R=b(b(r(l,l),l),b(l,l))
 ```
 
 Note that this makeshift checking will not ensure that the target graph does not include nonterminal symbols, so you should check this manually.
-Also, you need to specify the appropriate ordering of free links to use this makeshift, while the normal implementation of graph type ckecking finds the ordering automatically.
+Also, you need to specify the appropriate ordering of free links to use this makeshift, while the normal implementation of graph type checking finds the ordering automatically.
 
 ## Advanced Usage
 ```bash
@@ -93,7 +93,7 @@ performs like
 ./demo.sh rule skiplist
 ```
 
-Note that, if you made any changes to the source codes under `src` folder, you should run `make` command manually, whereas the `demo.sh` script automatically run the transpiler.
+Note that, if you made any changes to the source codes under `src` folder, you should run `make` command manually, whereas the `demo.sh` script automatically runs the transpiler.
 
 ## Details of each mode
 ### Graph type checking
