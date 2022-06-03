@@ -1,0 +1,7 @@
+defshape ring{
+  ring :- ring(L,L).
+  ring(X,Y) :- ring(c(X),Y).
+  ring(X,Y) :- c(X,Y).
+} nonterminal {
+  ring(X,Y)
+}

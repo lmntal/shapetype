@@ -1,0 +1,8 @@
+% ins@@ l(H,T,R) :- n(H1,l(H,H1),l(T1,T),T1,R).
+% del@@ n(H1,l(H,H1),l(T1,T),T1,R) :- l(H,T,R).
+
+rotR@@ n(H1,n(H2,X,Y,T2),Z,T1,R) :- n(H2,X,n(H1,Y,Z,T1),T2,R).
+rotL@@ n(H2,X,n(H1,Y,Z,T1),T2,R) :- n(H1,n(H2,X,Y,T2),Z,T1,R).
+
+delR@@ S=n(L,l,Z,T) :- T=L, S=Z.
+delL@@ S=n(L,Z,l,T) :- T=L, S=Z.

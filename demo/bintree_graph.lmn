@@ -1,0 +1,6 @@
+// 二分木
+% node(nil,nil,R)
+node(node(nil,node(nil,nil)),node(nil,nil),R)
+% nil(R)
+% node(R) % 型付けできない
+% nil(node,node,R) % 型付けできない

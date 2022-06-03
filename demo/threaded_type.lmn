@@ -1,0 +1,16 @@
+% defshape t(H,T,R){
+%   t(H,T,R) :- n(H1, t(H,H1), t(T1,T), T1, R).
+%   t(H,T,R) :- l(H,T,R).
+% }nonterminal{
+%   t(H,T,R)
+% }
+
+defshape t(H,T,R){
+  R=t(H,T) :- R=n(H1, t(H,H1), t(T1,T), T1).
+  R=t(H,T) :- R=l, H=T.
+  R=t(H,T) :- R=n(H, l, t(T1,T), T1).
+  R=t(H,T) :- R=n(H1, t(H,H1), l, T).
+  R=t(H,T) :- R=n(H, l, l, T).
+}nonterminal{
+  t(H,T,R)
+}

@@ -1,0 +1,5 @@
+defshape list(A,R){
+  R=list($n) :- $n1=$n-1 | R=c(t,list($n1)).
+  R=list($n) :- R=c(n,list($n)).
+  R=list(0)  :- R=nil.
+}

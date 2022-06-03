@@ -1,0 +1,9 @@
+c(X,M), a(M,Y,R) :- a(X,Y,R).
+% a(X,M,R), c(M,Y) :- a(X,Y,R). % false-negative
+% a(X,M,R), c(M,Y) :- a(c(X),M,R), c(M,Y). % false-negative
+% a(X,M,R), c(M,Y) :- a(X,M,R), c(M,Y).
+% a(X,M,R), c(M,Y) :- a(X,M,R), c(c(M),Y).
+% a(c(X),M,R), c(M,Y) :- a(X,Y,R).
+% a(X,Y,R) :- a(c(X),M,R), c(M,Y).
+% a(X,M,R), c(M,Y), dlist(X,Y) :- a(X,Y,R), dlist(X,Y). % with hint
+% a(X,M,R), c(M,Y), dlist(X,Y) :- a(X,Y,R), dlist(Y,X). % with hint

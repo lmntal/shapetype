@@ -1,0 +1,2 @@
+a(b(L),R) :- a(a(b(b(L))),R). % ill-typed
+a(b(c(L)),R) :- a(a(b(b(c(c(L))))),R). % well-typed

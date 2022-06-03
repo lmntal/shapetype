@@ -1,0 +1,15 @@
+defshape sl3(L,E){
+  s@@ sl3(L,E) :- sl(L,E,s(s(s(z))),z).
+
+  c1@@ sl(L,E,s(X),Y) :- sl(c(L),E,X,s(Y)).
+  e1@@ sl(L,E,X,Y) :- sle(L,E,X,Y).
+  n1@@ sl(L,E,X,Y) :- sln(L,E,X,Y).
+
+  e2@@ sle(L,E,s(X),Y) :- sle(L,E,X,s(Y)).
+  e3@@ sle(L,E,z,Y) :- e(L,E,L2,E2), sl(L2,E2,Y,z).
+
+  n2@@ sln(L,E,s(X),Y) :- sln(L,E,X,s(Y)).
+  n3@@ sln(L,E,z,s(s(s(z)))) :- n(L,E).
+} nonterminal {
+  sl(A,B,C,D), z(A), s(A,B), sle(A,B,C,D), sln(A,B,C,D)
+}

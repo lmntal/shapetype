@@ -1,0 +1,6 @@
+% 曖昧な文法 A ::= A plus A | A mul A | a
+defshape amb(L,R){
+  plus@@ R=amb(L) :- R=amb(plus(amb(L))).
+  % mul@@  R=amb(L) :- R=amb(mul(amb(L))).
+  a@@    R=amb(L) :- R=a(L).
+}

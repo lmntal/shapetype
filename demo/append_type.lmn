@@ -1,0 +1,11 @@
+% defshape appendList(R){
+%   appendList(R) :- nil(R).
+%   appendList(R) :- cons(appendList,R).
+%   appendList(R) :- append(appendList,appendList,R).
+% }
+
+defshape list(R){
+  p1@@ list(R) :- c(list,R).
+  p2@@ list(R) :- n(R).
+  p3@@ list(R) :- append(L1,L2,R),list(L1),list(L2).
+}

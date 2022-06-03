@@ -1,0 +1,5 @@
+b(S,leaf,R) :- b(S,r(leaf,leaf),R). % simple insert
+b(A,B,R) :- b(B,A,R). % flip
+
+% graph type checking
+rbtree(R) :- R=b(b(r(l,l),l),b(l,l)).

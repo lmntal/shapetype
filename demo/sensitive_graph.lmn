@@ -1,0 +1,2 @@
+% a(a(a(a(b(b(b(b(c(c(c(c(X))))))))))),Y)
+node(node(A,B),node(C,D),R),pair(C,A),pair(B,D)

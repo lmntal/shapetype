@@ -1,0 +1,13 @@
+defshape dlist(X,R){
+  p1@@ dlist(X,Y) :- X=Y. % connector issue
+  p2@@ dlist(X,Y) :- c(int,X,Y).
+  % p3@@ dlist(X,R) :- c(int,dlist(X),R).
+  % p4@@ dlist(X,R) :- dlist(c(int,X),R).
+  p5@@ dlist(X,Y) :- dlist(X,M),dlist(M,Y).
+
+  p6@@ dlist(X,Y) :- t2l(T,X,Y), tree(T).
+  p7@@ tree(T) :- n(int,tree,tree,T).
+  p8@@ tree(T) :- l(T).
+}nonterminal{
+  dlist(X,Y), tree(T)
+}

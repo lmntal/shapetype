@@ -1,0 +1,6 @@
+R=c(X,c(0,L)) :- R=c(0,c(X,L)).
+R=c(X,c(Y,L)) :- R=c(Y,c(X,L)). % ill-typed
+R=c($x,c($y,L)) :- R=c($y,c($x,L)). % ill-typed
+
+% R=c(X,c(none,L)) :- R=c(none,c(X,L)).
+% R=c(X,c(Y,L)) :- R=c(Y,c(X,L)). % ill-typed

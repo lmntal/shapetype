@@ -1,0 +1,3 @@
+% tree(T) |- t2l(T,X,Y) : dlist(X,Y)
+t2l(n(N,L,R),T,P) :- t2l(L,c(N,t2l(R,T)),P).
+t2l(l,T,P) :- T=P. % cannot be checked due to the issue of connectors

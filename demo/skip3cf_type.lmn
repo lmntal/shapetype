@@ -1,0 +1,19 @@
+defshape skiplist3(L,E){
+  s@@ skiplist3(L,E) :- sl3(L,E).
+  
+  c3@@ sl3(L,E) :- sl2(c(L),E).
+  c2@@ sl2(L,E) :- sl1(c(L),E).
+  c1@@ sl1(L,E) :- sl0(c(L),E).
+  
+  e3@@ sl3(L,E) :- e(L,E,L2,E2), sl3(L2,E2).
+  e2@@ sl2(L,E) :- e(L,E,L2,E2), sl3(L2,E2).
+  e1@@ sl1(L,E) :- e(L,E,L2,E2), sl3(L2,E2).
+  e0@@ sl0(L,E) :- e(L,E,L2,E2), sl3(L2,E2).
+
+  n3@@ sl3(L,E) :- n(L,E).
+  n2@@ sl2(L,E) :- n(L,E).
+  n1@@ sl1(L,E) :- n(L,E).
+  n0@@ sl0(L,E) :- n(L,E).
+} nonterminal {
+  sl3(L,E), sl2(L,E), sl1(L,E), sl0(L,E)
+}

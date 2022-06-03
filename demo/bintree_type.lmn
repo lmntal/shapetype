@@ -1,0 +1,4 @@
+defshape bintree(R){
+  R=bintree :- R=nil.
+  R=bintree :- R=node(bintree,bintree).
+}

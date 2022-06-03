@@ -1,0 +1,22 @@
+% balance(r(r(A,B),C),D,P) :- r(b(A,B),b(C,D),P).
+% balance(r(A,r(B,C)),D,P) :- r(b(A,B),b(C,D),P).
+% balance(A,r(B,r(C,D)),P) :- r(b(A,B),b(C,D),P).
+% balance(A,r(r(B,C),D),P) :- r(b(A,B),b(C,D),P).
+% balance(A,r(r(B,C),D),P) :- r(b(A,B),b(C,D),P).
+% balance(l,l,P) :- b(l,l,P).
+% balance(b(A,B),b(C,D),P) :- b(b(A,B),b(C,D),P).
+% balance(r(l,l),A,P) :- b(r(l,l),A,P).
+% balance(r(b(B,C),b(D,E)),A,P) :- b(r(b(B,C),b(D,E)),A,P).
+% balance(A,r(l,l),P) :- b(A,r(l,l),P).
+% balance(A,r(b(B,C),b(D,E)),P) :- b(A,r(b(B,C),b(D,E)),P).
+insert(T,P) :- turnB(insert1(T),P).
+turnB(r(L,R),P) :- b(L,R,P).
+turnB(b(L,R),P) :- b(L,R,P).
+turnB(l,P) :- l(P).
+% insert1(l,P) :- r(l,l,P).
+% insert1(b(L,R),P) :- balance(insert1(L),R,P).
+% insert1(b(L,R),P) :- balance(L,insert1(R),P).
+% insert1(b(L,R),P) :- b(L,R,P).
+% insert1(r(L,R),P) :- r(insert1(L),R,P).
+% insert1(r(L,R),P) :- r(L,insert1(R),P).
+% insert1(r(L,R),P) :- r(L,R,P).

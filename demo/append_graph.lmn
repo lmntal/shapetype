@@ -1,0 +1,2 @@
+% append(cons(cons(nil)),cons(nil),R)
+R=append(c(c(c(n))),c(n))

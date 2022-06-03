@@ -1,0 +1,2 @@
+pair(X,Y) :- pair(Y,X)
+% b1(X) :- b2(X)

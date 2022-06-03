@@ -1,0 +1,6 @@
+defshape list1(R){
+  R=list1 :- R=c(n, list1).
+  R=list1 :- R=c(t, list0).
+  R=list0 :- R=c(n, list0).
+  R=list0 :- R=nil.
+}

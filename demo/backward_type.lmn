@@ -1,0 +1,7 @@
+defshape p {
+  p :- p, proc.
+  p :- lock. % まだ誰もロックを獲得していない
+  p :- locked_proc. % locked_proc がロックを獲得した（ひとりだけしかロックを獲得しないようになっている……はず？）
+} nonterminal {
+  p
+}

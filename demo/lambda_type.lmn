@@ -1,0 +1,20 @@
+defshape lambda(R){
+  s@@ lambda(R) :- lam(X,X,R).
+  rot@@ lam(c(A,H),T,R) :- lam(H,T1,R), c(A,T1,T).
+  var@@ lam(c(A,T),T,R) :- R=A.
+  abs1@@ lam(H,T,R) :- abs(B,lam(c(B,H),T),R).
+  abs2@@ lam(H,T,R) :- abs(rm,lam(H,T),R).
+  app0@@ lam(H,T,R) :- app0(H,T,lam0(H1,H1),lam0(H2,H2),R).
+  app1L@@ app0(c(A,H),T,lam0(H1,T1),lam0(H2,T2),R)
+    :- c(A,T11,T1), app0(H,T,lam0(H1,T11),lam0(H2,T2),R).
+  app1R@@ app0(c(A,H),T,lam0(H1,T1),lam0(H2,T2),R)
+    :- c(A,T22,T2), app0(H,T,lam0(H1,T1),lam0(H2,T22),R).
+  app1LR@@ app0(c(A,H),T,lam0(H1,T1),lam0(H2,T2),R)
+    :- cp(A1,A2,A), c(A1,T11,T1), c(A2,T22,T2),
+       app0(H,T,lam0(H1,T11),lam0(H2,T22),R).
+  app9@@ app0(H,H,lam0(H1,T1),lam0(H2,T2),R)
+    :- app(lam(H1,T1),lam(H2,T2),R).
+} nonterminal {
+  lambda(R), lam(H,T,R),
+  app0(H,T), lam0(H,T), c(E,L,R)
+}

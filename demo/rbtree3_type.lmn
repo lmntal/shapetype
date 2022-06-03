@@ -1,0 +1,28 @@
+defshape rbtree3(R){
+   s@@ rbtree3(R) :- btree3(R).
+   bz@@ btree0(R) :- l(R).
+   tz@@  tree0(R) :- l(R).
+  bs3@@ btree3(R) :- b(tree2,tree2,R).
+  bs2@@ btree2(R) :- b(tree1,tree1,R).
+  bs1@@ btree1(R) :- b(tree0,tree0,R).
+  ts2@@  tree2(R) :- b(tree1,tree1,R).
+  ts1@@  tree1(R) :- b(tree0,tree0,R).
+   r2@@  tree2(R) :- r(btree2,btree2,R).
+   r1@@  tree1(R) :- r(btree1,btree1,R).
+   r0@@  tree0(R) :- r(btree0,btree0,R).
+} nonterminal {
+  rbtree3(R), btree3(R),
+  btree2(R), tree2(R),
+  btree1(R), tree1(R),
+  btree0(R), tree0(R),
+}
+
+% // 吉元JSSST版 深さ3までの数値制約付き赤黒木
+% defshape rbtree(Tree){
+%   prod0@@ rbtree(X) :- bnode(s(s(s(z))),X).
+%   prod1@@ bnode(z,X) :- l(X).
+%   prod2@@ bnode(s(M),X) :- b(node(M), node(M), X).
+%   prod3@@ node(z,X) :- l(X).
+%   prod4@@ node(s(M),X) :- b(node(M),node(M),X).
+%   prod5@@ node(M,X) :- r(bnode(M),bnode(M),X).
+% }

@@ -1,0 +1,23 @@
+defshape tree(R){
+  s@@ rbtree(R) :- btree(R).
+  bz@@ btree(R) :- l(R).
+  bs@@ btree(R) :- b(tree,tree,R).
+  r0@@  tree(R) :- r(btree,btree,R).
+
+  ts@@  tree(R) :- rbtree(R).
+
+  i1@@ infrared(P) :- tree(P).
+  i2@@ infrared(P) :- r(tree,tree,P).
+  t1@@ trees(L,R) :- tree(L), tree(R).
+  t2@@ trees(L,R) :- infrared(L), tree(R).
+  t3@@ trees(L,R) :- tree(L), infrared(R).
+
+  f1@@ tree(P) :- balance(L,R,P), trees(L,R).
+  f2@@ rbtree(P) :- insert(T,P), rbtree(T).
+  f3@@ rbtree(P) :- turnB(T,P), infrared(T).
+  f4@@ infrared(P) :- insert1(T,P), tree(T).
+  f5@@ tree(P) :- insert2(T,P), btree(T).
+} nonterminal {
+  rbtree(R), btree(R), tree(R),
+  infrared(R), trees(R)
+}

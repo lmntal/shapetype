@@ -1,0 +1,31 @@
+defshape mesh(){
+  mesh :- c(r,d,z,z).
+  r(R) :- c(r,z,R,z).
+  r(R) :- c(z,rd,R,z).
+  d(R) :- c(z,d,z,R).
+  d(R) :- c(dr,z,z,R).
+  rd(R) :- c(z,rd,h,R).
+  dr(R) :- c(dr,z,R,h).
+  rd(R1), dr(R2) :- c(z,z,R2,R1).
+  c(H1,V1,W1,N1), c(E1,z,H1,N2),
+  c(H2,S1,W2,V1), c(E2,S2,H2,h)
+  :-
+  c(H1,V1,W1,N1), c(E1,V2,H1,N2),
+  c(H2,S1,W2,V1), c(E2,S2,H2,V2).
+
+  c(H1,V1,W1,N1), c(E1,V2,H1,N2),
+  c(z,S1,W2,V1), c(E2,S2,h,V2),
+  :-
+  c(H1,V1,W1,N1), c(E1,V2,H1,N2),
+  c(H2,S1,W2,V1), c(E2,S2,H2,V2).
+
+  c(H1,V1,W1,N1), c(E1,V2,H1,N2),
+  c(H2,S1,W2,V1), z(V2), z(H2)
+    :-
+  c(H1,V1,W1,N1), c(E1,V2,H1,N2),
+  c(H2,S1,W2,V1), c(E2,S2,H2,V2),
+  z(E2), z(S2).
+} nonterminal {
+  mesh, h(R),
+  r(R), d(R), rd(R), dr(R)
+}

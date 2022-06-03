@@ -1,0 +1,8 @@
+defshape abList(R){
+  R=ablist :- R=c(n,ablist).
+  R=ablist :- R=c(a,blist).
+  R=blist  :- R=c(n,blist).
+  R=blist  :- R=c(b,list).
+  R=list   :- R=c(n,list).
+  R=list   :- R=nil.  
+}

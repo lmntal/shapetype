@@ -1,0 +1,5 @@
+% 曖昧でない文法 A ::= a plus A | a
+defshape notamb(L,R){
+  plus@@ notamb(L,R) :- a(plus(notamb(L)),R).
+  a@@    notamb(L,R) :- a(L,R).
+}

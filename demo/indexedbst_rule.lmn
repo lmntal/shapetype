@@ -1,0 +1,13 @@
+% node($y,node($x,A,B),C,R) :- node($x,A,node($y,B,C),R). % R rotate
+% node($x,A,node($y,B,C),R) :- node($y,node($x,A,B),C,R). % L rotate
+
+% graph type checking
+% bst(R) :- R=node(3,
+%   node(1,node(0,nil,nil),node(2,nil,nil)),
+%   node(5,node(4,nil,nil),node(6,nil,nil))
+% ).
+
+bst(R) :- R=node(3,
+  node(1,nil,nil),
+  node(5,nil,nil)
+).

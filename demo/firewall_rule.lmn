@@ -1,0 +1,63 @@
+% initial state:
+% joint(cons(V1,nil),nil), l(V1, W1),
+% joint(cons(V1,cons(V10,nil)),nil), f(V10, W20),
+% joint(cons(W2,cons(W20,nil)),nil), l(W2, V2),
+% joint(cons(V2,nil),cons(up,nil))
+
+% 各リストは任意に並び替えて良い
+R=cons(A,cons(B,T)) :- R=cons(B,cons(A,T)).
+
+% location に任意数の safe なプロセスを生成する
+% l(!V1, !V2) :- sp(!V1), l(!V1, !V2).
+createProcess@@
+joint(cons(X,LsX),PsX),l(X,Y),joint(cons(Y,LsY),PsY)
+  :- joint(cons(X,LsX),cons(sp,PsX)),l(X,Y),joint(cons(Y,LsY),PsY).
+
+% process は safe/unsafe を問わず，location を移動できる
+% sp(!V1), l(!V1, !V2) :- l(!V1, !V2), sp(!V2).
+% up(!V1), l(!V1, !V2) :- l(!V1, !V2), up(!V2).
+crossLocation_Out@@
+joint(cons(X,LsX),cons(P,PsX)),l(X,Y),joint(cons(Y,LsY),PsY)
+  :- joint(cons(X,LsX),PsX),l(X,Y),joint(cons(Y,LsY),cons(P,PsY)).
+
+% l(!V1, !V2), sp(!V2) :- sp(!V1), l(!V1, !V2).
+% l(!V1, !V2), up(!V2) :- up(!V1), l(!V1, !V2).
+crossLocation_In@@
+joint(cons(X,LsX),PsX),l(X,Y),joint(cons(Y,LsY),cons(P,PsY))
+  :- joint(cons(X,LsX),cons(P,PsX)),l(X,Y),joint(cons(Y,LsY),PsY).
+
+% process は safe/unsafe を問わず，connection を移動できる
+% sp(!V1), c(!V1, !V2) :- c(!V1, !V2), sp(!V2).
+% up(!V1), c(!V1, !V2) :- c(!V1, !V2), up(!V2).
+crossConnection_Out@@
+joint(cons(X,LsX),cons(P,PsX)),c(X,Y),joint(cons(Y,LsY),PsY)
+  :- joint(cons(X,LsX),PsX),c(X,Y),joint(cons(Y,LsY),cons(P,PsY)).
+
+% c(!V1, !V2), sp(!V2) :- sp(!V1), c(!V1, !V2).
+% c(!V1, !V2), up(!V2) :- up(!V1), c(!V1, !V2).
+crossConnection_In@@
+joint(cons(X,LsX),PsX),c(X,Y),joint(cons(Y,LsY),cons(P,PsY))
+  :- joint(cons(X,LsX),cons(P,PsX)),c(X,Y),joint(cons(Y,LsY),PsY).
+
+% Firewall は process が外に出て行く分には何もしない（unsafe なプロセスも通す）
+% sp(!V1), f(!V1, !V2) :- f(!V1, !V2), sp(!V2).
+% up(!V1), f(!V1, !V2) :- f(!V1, !V2), up(!V2).
+crossFirewall_Out@@
+joint(cons(X,LsX),cons(P,PsX)),f(X,Y),joint(cons(Y,LsY),PsY)
+  :- joint(cons(X,LsX),PsX),f(X,Y),joint(cons(Y,LsY),cons(P,PsY)).
+
+% 蛇足：より実用的にするならspは内向きも許可していいはず
+% f(!V1, !V2), sp(!V2) :- sp(!V1), f(!V1, !V2).
+crossFirewall_In@@
+joint(cons(X,LsX),PsX),f(X,Y),joint(cons(Y,LsY),cons(sp,PsY))
+  :- joint(cons(X,LsX),cons(sp,PsX)),f(X,Y),joint(cons(Y,LsY),PsY).
+
+% location は connection を通してつながることができる
+% l(!V1, !V2) :- l(!V4, !V3), c(!V3, !V2), l(!V1, !V2). % ??
+createConnectedLocation@@
+joint(cons(V1,LsV1),PsV1),l(V1,V2),joint(cons(V2,LsV2),PsV2)
+:-
+joint(cons(V1,LsV1),PsV1),l(V1,V2),
+joint(cons(V2,cons(V20,LsV2)),PsV2),c(V20,V3),
+joint(cons(V3,cons(V30,nil)),nil),c(V30,V4),
+joint(cons(V4,nil),nil).

@@ -1,0 +1,6 @@
+defshape deque(R) {
+  R=deque :- R=d(nodes(Nil), Nil). 
+  R=nodes(Nil) :- R=nodes(nodes(Nil)).
+  R=nodes(Nil) :- R=c(Nil).
+  R=deque :- R=append(deque, deque).
+}

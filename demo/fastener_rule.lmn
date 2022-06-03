@@ -1,0 +1,6 @@
+R=f(c(Z),Y,t) :- R=c(f(Z,Y,f)). % false-negative
+R=f(X,Y,f), c(Y,Z) :- R=c(f(X,Z,t)). % false-negative
+R=f(c(dlist(Y)),Y,t) :- R=c(f(dlist(Y),Y,f)). % with hint
+R=f(dlist(c(Y)),Y,f) :- R=c(f(dlist(Y),Y,t)). % with hint
+R=f(X,X,t) :- R=n.
+R=f(X,X,f) :- R=n.

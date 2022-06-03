@@ -1,0 +1,11 @@
+defshape adlist(R){
+  R=adlist :- R=a(dlist(X),X).
+  R=adlist :- R=a(X,X).
+  Y=dlist(X) :- Y=c(dlist(X)).
+  Y=dlist(X) :- Y=c(X).
+  % Y=dlist(X) :- Y=c(c(X)).
+  % Y=dlist(X) :- Y=dlist(c(X)). % admissible 
+  % Y=dlist(X) :- Y=c(dlist(c(X))). % admissible
+}nonterminal{
+  adlist(R), dlist(X,R)
+}

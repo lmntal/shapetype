@@ -1,0 +1,2 @@
+R = append(d(H1, Nil1), d(H2, Nil2))
+:- R = d(H1, Nil2), Nil1 = H2.

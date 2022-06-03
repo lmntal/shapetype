@@ -1,0 +1,7 @@
+// 卒論版rbtree
+% leaf(Tree)
+% bnode(int,leaf,leaf,Tree)
+% bnode(int,bnode(int,leaf,leaf),leaf,Tree) % 卒論に誤植
+% bnode(int,rnode(int,leaf,leaf),leaf,Tree) % 卒論に誤植
+% rnode(int,leaf,bnode(int,leaf,leaf),Tree) % falseが正しい
+b(b(r(b(r(l,l),l),b(l,l)),b(l,l)),b(b(l,l),b(l,l)),R)

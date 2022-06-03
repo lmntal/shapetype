@@ -1,0 +1,15 @@
+% % a^n b^n c^n
+% defshape s(X,Y){
+%   p1@@ s(X,Y) :- a(nb(s(c(X))),Y).
+%   p2@@ s(X,Y) :- a(b(c(X)),Y).
+%   p3@@ nb(a(X),Y) :- a(nb(X),Y).
+%   p4@@ nb(b(X),Y) :- b(b(X),Y).
+% }
+
+defshape tree(R){
+  p1@@ tree(R) :- node(tree,tree,R).
+  p2@@ tree(R) :- nil(R).
+  p3@@ nil(X), nil(Y) :- pair(X,Y).
+}nonterminal{
+  tree(R),nil(R)
+}

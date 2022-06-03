@@ -1,0 +1,4 @@
+defshape list(R){
+  list(R) :- c(list,R).
+  list(R) :- nil(R).
+}

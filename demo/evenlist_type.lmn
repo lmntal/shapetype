@@ -1,0 +1,7 @@
+defshape evenlist(L){
+  e@@ evenlist(L) :- c(oddlist,L).
+  o@@ oddlist(L) :- c(evenlist,L).
+  n@@ evenlist(L) :- nil(L).
+} nonterminal {
+  evenlist(L),oddlist(L)
+}

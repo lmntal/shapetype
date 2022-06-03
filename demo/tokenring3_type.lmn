@@ -1,0 +1,88 @@
+defshape tokenring3(){
+  tokenring3 :- X=tokenring3(X).
+  R=tokenring3(X) :- R=t(tokenring2(X)).
+  R=tokenring2(X) :- R=t(tokenring1(X)).
+  R=tokenring1(X) :- R=t(tokenring0(X)).
+  R=tokenring3(X) :- R=n(tokenring3(X)).
+  R=tokenring2(X) :- R=n(tokenring2(X)).
+  R=tokenring1(X) :- R=n(tokenring1(X)).
+  R=tokenring0(X) :- R=n(tokenring0(X)).
+  R=tokenring0(X) :- R=n(X).
+} nonterminal {
+  tokenring3,
+  tokenring3(X,Y), tokenring2(X,Y),
+  tokenring1(X,Y), tokenring0(X,Y)
+}
+
+% % cons入り（右辺のアトム数が多いため非効率的）
+% defshape tokenring3(){
+%   tokenring3 :- X=tokenring3(X).
+%   R=tokenring3(X) :- R=c(t,tokenring2(X)).
+%   R=tokenring2(X) :- R=c(t,tokenring1(X)).
+%   R=tokenring1(X) :- R=c(t,tokenring0(X)).
+%   R=tokenring3(X) :- R=c(n,tokenring3(X)).
+%   R=tokenring2(X) :- R=c(n,tokenring2(X)).
+%   R=tokenring1(X) :- R=c(n,tokenring1(X)).
+%   R=tokenring0(X) :- R=c(n,tokenring0(X)).
+%   R=tokenring0(X) :- R=c(n,X).
+% } nonterminal {
+%   tokenring3,
+%   tokenring3(X,Y), tokenring2(X,Y),
+%   tokenring1(X,Y), tokenring0(X,Y)
+% }
+
+% % Admissible Rule入り（あまり意味はなかった）
+% defshape tokenring3(){
+%   tokenring3 :- X=tokenring3(X).
+%   R=tokenring3(X) :- R=c(t,tokenring2(X)).
+%   R=tokenring3(X) :- R=tokenring2(c(t,X)).
+%   R=tokenring2(X) :- R=c(t,tokenring1(X)).
+%   R=tokenring2(X) :- R=tokenring1(c(t,X)).
+%   R=tokenring1(X) :- R=c(t,tokenring0(X)).
+%   R=tokenring1(X) :- R=tokenring0(c(t,X)).
+%   R=tokenring3(X) :- R=c(n,tokenring3(X)).
+%   R=tokenring3(X) :- R=tokenring3(c(n,X)).
+%   R=tokenring2(X) :- R=c(n,tokenring2(X)).
+%   R=tokenring2(X) :- R=tokenring2(c(n,X)).
+%   R=tokenring1(X) :- R=c(n,tokenring1(X)).
+%   R=tokenring1(X) :- R=tokenring1(c(n,X)).
+%   R=tokenring0(X) :- R=c(n,tokenring0(X)).
+%   % R=tokenring0(X) :- R=tokenring0(c(n,X)).
+%   R=tokenring0(X) :- R=c(n,X).
+% } nonterminal {
+%   tokenring3,
+%   tokenring3(X,Y), tokenring2(X,Y),
+%   tokenring1(X,Y), tokenring0(X,Y)
+% }
+
+% % インデックス型バージョン・cons入り（右辺のアトム数が多く、コンパイラの時点でダメ）
+% defshape tokenring3(){
+%   tokenring3 :- $a>=1,$b>=1,$c>=1 | X=ns($a,c(t,ns($b,c(t,ns($c,c(t,X)))))).
+%   tokenring3 :- $a>=1,$b>=1 | X=ns($a,c(t,ns($b,c(t,c(t,X))))).
+%   tokenring3 :- $a>=1 | X=ns($a,c(t,c(t,c(t,X)))).
+%   tokenring3 :- X=c(t,c(t,c(t,X))).
+%   R=ns($n,L) :- $n>1,$n1=$n-1 | R=c(n,ns($n1,L)).
+%   R=ns(1,L)  :- R=c(n,L).
+% }
+
+% % インデックス型バージョン・consなし（あまり意味はなかった）
+% defshape tokenring3(){
+%   tokenring3 :- $a>=1,$b>=1,$c>=1 | X=ns($a,t(ns($b,t(ns($c,t(X)))))).
+%   tokenring3 :- $a>=1,$b>=1 | X=ns($a,t(ns($b,t(t(X))))).
+%   tokenring3 :- $a>=1 | X=ns($a,t(t(t(X)))).
+%   tokenring3 :- X=t(t(t(X))).
+%   R=ns($n,L) :- $n>1,$n1=$n-1 | R=n(ns($n1,L)).
+%   R=ns($n,L) :- $n>1,$n1=$n-1 | R=ns($n1,n(L)).
+%   R=ns(1,L)  :- R=n(L).
+% }
+
+% % 上記インデックス型バージョンのnの個数を明示しないことにしたバージョン（あまり意味はなかった）
+% defshape tokenring3(){
+%   tokenring3 :- X=ns(t(ns(t(ns(t(X)))))).
+%   tokenring3 :- X=ns(t(ns(t(t(X))))).
+%   tokenring3 :- X=ns(t(t(t(X)))).
+%   tokenring3 :- X=t(t(t(X))).
+%   R=ns(L) :- R=n(ns(L)).
+%   R=ns(L) :- R=ns(n(L)).
+%   R=ns(L)  :- R=n(L).
+% }

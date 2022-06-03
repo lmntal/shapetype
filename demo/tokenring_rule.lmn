@@ -1,0 +1,2 @@
+R=t(n(L)) :- R=n(t(L)). % false-negative
+X=ns(t(n(X))) :- X=ns(n(t(X))). % with hint

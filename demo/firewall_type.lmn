@@ -1,0 +1,35 @@
+defshape firewall(){
+  % firewall :- joint(cons(V1,nil),sps),l(V1,W1),
+  %             clsps(cons(W1,cons(W10,nil))),f(W10,W2),
+  %             clps(cons(W2,cons(W20,nil))),l(V2,W20),
+  %             joint(cons(V2,nil),ps).
+  firewall :- f1(W1),f2(W1,W2),f3(W2,V2),f4(V2).
+  f1(W1) :- joint(cons(V1,nil),sps),l(V1,W1).
+  f2(W1,W2) :- clsps(cons(W1,cons(W10,nil))),f(W10,W2).
+  f3(W2,V2) :- clps(cons(W2,cons(W20,nil))),l(V2,W20).
+  f4(V2) :- joint(cons(V2,nil),ps).
+  R=ps :- R=cons(up,ps).
+  R=ps :- R=sps.
+  R=sps :- R=cons(sp,sps).
+  R=sps :- R=nil.
+  % clsps(Ls) :- clsps(cons(V,Ls)),c(V,V1),
+  %              joint(cons(V1,cons(V10,nil)),sps),
+  %              l(V10,V2),clsps(cons(V2,nil)).
+  clsps(Ls) :- clsps1(Ls,V1),clsps2(V1,V10),clsps3(V10).
+  clsps1(Ls,V1) :- clsps(cons(V,Ls)),c(V,V1).
+  clsps2(V1,V10) :- joint(cons(V1,cons(V10,nil)),sps).
+  clsps3(V10) :- l(V10,V2),clsps(cons(V2,nil)).
+  clsps(Ls) :- joint(Ls,sps).
+  % clps(Ls) :- clps(cons(V,Ls)),c(V,V1),
+  %             joint(cons(V1,cons(V10,nil)),ps),
+  %             l(V10,V2),clps(cons(V2,nil)).
+  clps(Ls) :- clps1(Ls,V1),clps2(V1,V10),clps3(V10).
+  clps1(Ls,V1) :- clps(cons(V,Ls)),c(V,V1).
+  clps2(V1,V10) :- joint(cons(V1,cons(V10,nil)),ps).
+  clps3(V10) :- l(V10,V2),clps(cons(V2,nil)).
+  clps(Ls) :- joint(Ls,ps).
+} nonterminal {
+  f1(W1), f2(W1,W2), f3(W2,V2), f4(V2),
+  firewall, sps(V), ps(V),
+  clsps(V), clps(V)
+}

@@ -1,0 +1,6 @@
+// skiplist
+% node1(X11,List1),node2(X12,X21,X11,List2),nil(X12,X21)
+% node1(X11,L13),node2(X12,X21,X11,L2),nil(X12,X21)
+% node1(L0,I_0),node2(L1,I_1,L0,I_2),nil(L1,I_2) % 型付けできない
+% node2(L0,node2(L1,nil(L1),L0),F0,F1)
+node1(node1(L0),X),node2(L1,node2(node1(L2),node2(L3,node2(L4,node2(node1(L5),node2(node1(L6),nil(L6),L5),L4),L3),L2),L1),L0,Y)

@@ -1,0 +1,281 @@
+
+
+init@@ init={$init[]}, reduce={@reduce}, rules={@r}, reversedRules={@rr}, start={$start[]}  :- {
+  st1,
+  Map = state_space.state_map_find(state_space.state_map_init,{$start[]},S),
+  map = getIDs(Map,{$init[]},LhsID,ID,RetRule),
+  start = S,
+  stk = [[p(RetRule,LhsID,ID)]],
+  set = set.init,
+  cycle = set.init,
+  trail = [],
+  rules = {@r},
+  state_count=0,
+  reversedRules={@rr},
+  % log = [],
+  @reduce.
+
+  // if (stk == [[]]) return true;
+  st1_empty@@
+  st1, stk=[[]], trail=[] :- ret=true.
+
+  // cur = stk.top; if (cur == []) { stk.pop(); trail.pop(); continue; }
+  st1_top_empty@@
+  st1, stk=[[]|Stk], trail=[p({$p[]},H,H1)|T]
+    :- int(H),int(H1) |
+  st1, stk=Stk, trail=T.
+
+  // p(x,id_x,id_x_) = cur.pop();
+  st1@@
+  st1, stk=[[p({$x[]},X,X1)|T]|Stk]
+    :-
+  st50, stk=[T|Stk], px=p({$x[]},X,X1).
+
+  make_pairs@@ R=make_pairs(L) :- R=mpsub(L,[]).
+  mpsub1@@ R=mpsub([],L) :- R=L.
+  mpsub2@@ R=mpsub([{$rule[]}|T],L), map=Map
+    :-
+  map=getIDs(Map,{$rule[]},LhsID,ID,RetRule),
+  R=mpsub(T,addnext(p(RetRule,LhsID,ID),L)).
+
+  addnext1@@ R=addnext(p(Rule,LhsID,ID),[])% , log=Log
+    :- int(LhsID),int(ID) | R=[p(Rule,LhsID,ID)]. %, log=[added(ID)|Log].
+  addnext2@@ R=addnext(p({$rule[]},LhsID,ID),[p({$rule2[]},LhsID2,ID2)|T])
+    :- ID=:=ID2, int(LhsID2) | R=[p({$rule2[]},LhsID,ID)|T].
+  addnext3@@ R=addnext(p(Rule,LhsID,ID),[p(Rule2,LhsID2,ID2)|T])
+    :- ID=\=ID2 | R=[p(Rule2,LhsID2,ID2)|addnext(p(Rule,LhsID,ID),T)].
+
+  // getIDs(+Map,+Rule,-LhsID,-ID,-RetRule,-RetMap)
+  getIDs@@ getIDs(Map,{$rule[]},LhsID,ID,RetRule,RetMap)
+    :-
+  state_space.state_map_find(Map,{$rule[]},ID,Map1),
+  getlhsID(Map1,{$rule[]},LhsID,RetRule,RetMap).
+
+  // getlhsID(+Map,+Rule,-ID,-RetRule,-RetMap)
+  getlhsID@@ Ret=getlhsID(Map,Rule,ID,RetRule)
+    :- Ret=getlhsIDsub(Map,LHS,ID), getlhs(Rule,RetRule,LHS).
+  getlhsIDsub@@ Ret=getlhsIDsub(Map,{$lhs[]},ID)
+    :- Ret=state_space.state_map_find(Map,{$lhs[]},ID).
+
+  // getlhs(+Rule, -RetRule, -LHS)
+  getlhs@@
+  Ret=getlhs({rule({$l},{$r})},Res)
+    :- copymem({$l},Src,Copy), Ret=getlhs1(Src,Copy,{$r},Res).
+
+  getlhs1@@
+  Ret=getlhs1({$src},{$copy},{$r},Res) :- Ret={$copy}, Res={rule({$src},{$r})}.
+
+  copymem@@
+  copymem({$mem},Src,Copy)
+    :- 
+  copymem_sub({
+    res=nlmem.copy({$mem}).
+    Z=copied(X,Y) :- X=Z, Y='.'.
+    {$p[X|*A]},X='.' :- {$p[X|*A],X=free}.
+  }, Src, Copy).
+
+  copymem_sub@@
+  copymem_sub({res={$p},{free('+'),$q},@r}/,Src,Copy)
+    :- Src={$p},Copy={$q}.
+
+  st50@@
+  st50, px=p({$n[]},N,N1), set=Set
+    :- int(N1) |
+  st501, px=p({$n[]},N,N1), set=set.find(Set, N1, res).
+
+  st501_found@@
+  st501, res=some, px=p({$n[]},N,N1) :- int(N),int(N1) | st1.
+
+  st501@@
+  st501, res=none :- st51.
+
+  // if (px.id in cycle) {
+  st51@@
+  st51, px=p({$n[]},N,N1), cycle=Cycle
+    :- int(N), int(N1) |
+  st52, px=p({$n[]},N,N1), cycle=set.find(Cycle, N, res).
+
+  st52_found@@
+  st52, res=some, px=p({$n[]},N,N1) :- st53, red=reduce({$n[]}), px=p({$n[]},N,N1).
+
+  st52@@
+  st52, res=none :- st6.
+
+  // if (Reduce(px.graph,ps,map)) continue;
+  st53_true@@
+  st53, red=true, px=p({$rule[]},N,N1)
+    :- int(N),int(N1) |
+  st1.
+
+  st53@@
+  st53, red=false :- ret=false.
+
+  // if (px.id in trail){
+  st6@@
+  st6, trail=Trail, stk=Stk, px=p({$rule[]},X,X1)
+    :- int(X) |
+  st7, res=find(Trail, Stk, X, trail, stk), px=p({$rule[]},X,X1).
+
+  // find(+Trail, +Stk, +X, -RTrail, -RStk, -Ret)
+  find1@@ Ret=find([p({$t[]},T,T1)|Trail], [L|Stk], X, RTrail, RStk)
+    :- T =:= X, int(T1) | Ret=some(Trail,Stk,p({$t[]},T,T1)), RStk=[L], RTrail=[p({$t[]},T,T1)].
+  find2@@ Ret=find([p({$t[]},T,T1)|Trail], [L|Stk], X, RTrail, RStk)
+    :- T =\= X | Ret=find(Trail, Stk, X, RT, RS), RTrail=[p({$t[]},T,T1)|RT], RStk=[L|RS].
+  find3@@ Ret=find([],Stk,X,RTrail,RStk) :- int(X) | RTrail=[], RStk=Stk, Ret=none.
+
+  removelist1@@ removelist=[] :- .
+  removelist2@@ removelist=[p({$t[]},X,X1)|L] :- int(X),int(X1) | removelist=L.
+  removelists1@@ removelists=[] :- .
+  removelists2@@ removelists=[H|T] :- removelist=H, removelists=T.
+
+  // if (Reduce(trail.top,ps,map)) {
+  st7_found@@
+  st7, res=some(Trail,Stk,p({$t[]},T,T1)), stk=RS, trail=RT
+    :- int(T), int(T1) | 
+  st71, red=reduce({$t[]}),
+  trail=Trail, stk=Stk, removelists=RS, removelist=insertall(RT).
+
+  insertall1@@ R=insertall([p({$t[]},T,T1)|L]), cycle=Cycle
+    :- int(T) | R=[p({$t[]},T,T1)|insertall(L)], cycle=set.insert(Cycle,T).
+  insertall2@@ R=insertall([]) :- R=[].
+
+  // continue;
+  st71@@
+  st71, red=true, px=p({$x[]},X,X1)
+    :- int(X), int(X1) |
+  st1.
+
+  // else return false;
+  st71_false@@
+  st71, red=false :- ret=false.
+
+  st7@@
+  st7, res=none, px=p({$rule[]},X,X1) %, stk=[[]|Stk]
+    :- int(X) |
+  st81, res=isStart(X), px=p({$rule[]},X,X1). %, stk=Stk.
+
+  isStart1@@ R=isStart(X), start=S :- X=:=S | R=true, start=S.
+  isStart2@@ R=isStart(X), start=S :- X=\=S | R=false, start=S.
+
+  st81@@
+  st81, res=false :- st3.
+
+  // if (px is start) { if (Reduce(px.graph,ps,map)) continue; else return false; }
+  st81_true@@
+  st81, res=true, px=p({$t[]},T,T1) :- int(T) | st71, red=reduce({$t[]}), px=p({$t[]},T,T1).
+
+  % st9@@
+  % st9, px=p({$x[]},X,X1) :- int(X),int(X1) | st1.
+
+  // set.insert(id_x); nexts = getNext(x,ps);
+  st3@@
+  st3, px=p({$x[]},X,X1), set=Set, rules={@r}, state_count=N %, log=Log
+    :- int(X1), N1=N+1 |
+  st31, px=p({$x[]},X,X1), set=set.insert(Set,X1),
+  nexts=make_pairs(state_space.react_nd_set({@r}, {$x[]}, rules)),
+  state_count=N1. %, log=[px({$x[]},X)|Log].
+
+  // if (nexts == []) { continue; }
+  st31_empty@@
+  st31, px=p({$x[]},X,X1), nexts=[] :- int(X),int(X1) | st1.
+
+  // trail.push(p(x,id_x,id_x_)); list = []; stk.push(list);
+  st31@@
+  st31, px=p({$x[]},X,X1), stk=S, nexts=[p({$n[]},N,N1)|Ns], trail=Trail
+    :- st1, stk=[[p({$n[]},N,N1)|Ns]|S], trail=[p({$x[]},X,X1)|Trail].
+
+  state_sum(0,0).
+  state_sum(N,S), reduce_states=M :- N1=N+1, S1=M+S | state_sum(N1,S1).
+
+  % stdout=io.stdout.
+  % stdout=O, print=S :- stdout=io.print_line(O,S).
+
+  % ret=Ret, log=Log :- ret=Ret, print_logs(rev_log(Log,[])).
+  % R=rev_log([],X) :- R=X.
+  % R=rev_log([H|T],X) :- R=rev_log(T,[H|X]).
+  % print_logs([]) :- .
+  % print_logs([H|T]) :- print_log(H), print_logs(T).
+  % print_log(pn({$n[]},N)) :- .
+}.
+
+reduce={
+  reduce_init@@
+  Ret=reduce({rule({$l},{$r})}) :- Ret=reduce_sub({rule({$l,flink=[]},{$r,flink=[]})}).
+
+  reduce_sub1@@
+  Ret=reduce_sub({rule({$l[X,FL|*L], flink=FL},{$r[X,FR|*R], flink=FR})})
+    :- 
+  Ret=reduce_sub({rule({$l[X,FL|*L], flink=[X|FL]},{$r[Y,FR|*R], flink=[Y|FR]})}).
+
+  reduce_sub2@@
+  Ret=reduce_sub({rule({$l[FL], flink=FL},{$r[FR], flink=FR})})
+    :- 
+  Ret=reduce({$r[FR], flink=FR}, {$l[FL], flink=FL}).
+
+  reduce@@ R=reduce({$x[]},{$y[]}), reversedRules={@r}, map=Map :- class(Map,"state_map") | R=reduce{
+    st1,
+    dest = p({$y[]},ID_Y),
+    Map1 = state_space.state_map_find(Map, {$x[]}, ID_X),
+    map  = state_space.state_map_find(Map1, {$y[]}, ID_Y),
+    stk  = [p({$x[]},ID_X)],
+    set  = set.init,
+    rules = {@r},
+    states=0.
+    
+    // if (stk == []) return false;
+    reduce_st1_empty@@
+    st1, stk=[] :- ret=false.
+
+    // p(x,id_x) = pop(); set.insert(id_x);
+    reduce_st1@@
+    st1, stk=[p({$x[]},X)|T], set=Set
+      :- int(X) |
+    st2, stk=T, px=p({$x[]},X), set=set.insert(Set,X).
+
+    // if (id_x =:= dest.id) return true;
+    reduce_st2_found@@
+    st2, px=p({$x[]},X), dest=p({$y[]},Y) :- X =:= Y | ret=true.
+
+    // nexts = getNext(x,ps);
+    reduce_st2@@
+    st2, px=p({$x[]},X), rules={@r}, states=N
+      :- N1=N+1 |
+    st3, px=p({$x[]},X), nexts=state_space.react_nd_set({@r}, {$x[]}, rules),
+    states=N1.
+
+    reduce_st3_empty@@
+    st3, px=p({$x[]},X), nexts=[] :- int(X) | st1.
+
+    // for (next of nexts) { pn = p(next, getID(map,next));
+    reduce_st3@@
+    st3, nexts=[{$n[]}|T], map=Map
+      :-
+    st4, nexts=T, pn=p({$n[]},NID),
+    map = state_space.state_map_find(Map, {$n[]}, NID).
+
+    reduce_st4@@
+    st4, pn=p({$n[]},N), set=Set
+      :- int(N) |
+    st5, pn=p({$n[]},N), set=set.find(Set, N, found).
+
+    // if (pn.id in set) continue;
+    reduce_st5_already@@
+    st5, found=some, pn=p({$n[]},N) :- int(N) | st3.
+    
+    reduce_st5@@
+    st5, found=none, stk=Stk, pn=p({$n[]},N) :- st3, stk=[p({$n[]},N)|Stk].
+
+    reduce_gc_set@@
+    ret=R, set=Set :- ret=R, set.free(Set).
+
+    reduce_gc_stk_empty@@
+    ret=R, stk=[] :- ret=R.
+
+    reduce_gc_stk@@
+    ret=R, stk=[p({$x[]},X)|T] :- int(X) | ret=R, stk=T.
+  }.
+  reduce_end@@
+  R=reduce{ret=$ret, map=Map, rules={@r}, states=N, $p[], @rest}
+    :- unary($ret), class(Map, "state_map"), int(N) |
+  R=$ret, map=Map, reversedRules={@r}, reduce_states=N.
+}.

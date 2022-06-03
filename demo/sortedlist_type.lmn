@@ -1,0 +1,5 @@
+defshape sorted(R){
+  R=sorted :- R=sorted($min).
+  R=sorted($min) :- $min1>=$min | R=c($min1,sorted($min1)).
+  R=sorted($min) :- R=n.
+}

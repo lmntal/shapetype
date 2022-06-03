@@ -1,0 +1,4 @@
+% c(Y,Z) :- c(c(Y),Z) % 保存する
+% nil(X) :- f(X) % 保存しない
+
+c(c(XL),XR),c(YL,YR) :- c(c(YL),YR), c(XL,XR). % false-negative

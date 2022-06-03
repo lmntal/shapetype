@@ -1,0 +1,8 @@
+defshape skip(L1,L2){
+  skip(L1,L2) :- n2(X1,X2,L2,L1),locals(X3,X1),skip(X3,X2).
+  skip(L1,L2) :- n2(X1,X2,L2,L1),skip(X1,X2).
+  skip(L1,L2) :- nil(L1,L2).
+  % R=locals(L) :- R=locals(locals(L)).
+  R=locals(L) :- R=n1(locals(L)).
+  R=locals(L) :- R=n1(L).
+}

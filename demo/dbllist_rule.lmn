@@ -1,0 +1,7 @@
+cons @@ 
+R = dbl_list(cons(RevThis, Next, RevHead), Tail, RevHead, RevTail) 
+:- R = dbl_list(cons(This, cons(RevThis, Next, This), RevHead), Tail, RevHead, RevTail). 
+
+snoc @@ 
+R = dbl_list(Head, Tail, RevHead, RevTail), Prev = cons(RevTail, RevHead, RevPrev) 
+:- R = dbl_list(Head, Tail, RevHead, RevTail), Prev = cons(This, cons(RevTail, RevHead, This), RevPrev). 

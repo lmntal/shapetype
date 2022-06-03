@@ -1,0 +1,2 @@
+R=c(a,c(n,L)) :- R=c(n,c(a,L)).
+R=c(b,c(n,L)) :- R=c(n,c(b,L)).

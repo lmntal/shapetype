@@ -1,0 +1,4 @@
+joint(cons(V1,nil),nil), l(V1, W1),
+joint(cons(V1,cons(V10,nil)),nil), f(V10, W20),
+joint(cons(W2,cons(W20,nil)),nil), l(W2, V2),
+joint(cons(V2,nil),cons(up,nil))

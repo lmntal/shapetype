@@ -1,0 +1,2 @@
+R=append(c(X),Y) :- R=c(append(X,Y)).
+R=append(n,Y) :- R=Y.

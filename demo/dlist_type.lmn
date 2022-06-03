@@ -1,0 +1,6 @@
+defshape dlist(X,R){
+  R=dlist(X) :- R=X.
+  R=dlist(X) :- R=c(X).
+  R=dlist(X) :- R=c(dlist(X)).
+  % R=dlist(X) :- R=dlist(c(X)).
+}

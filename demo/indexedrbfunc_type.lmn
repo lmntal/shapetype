@@ -1,0 +1,31 @@
+defshape rbtree1(R){
+  s@@  rbtree(R) :- $n>=0 | rbtree($n,R).
+  sr@@ rbtree1(R) :- $n>=0 | rbtree1($n,R).
+  % st@@ tree(R) :- $n>=0 | tree($n,R).
+  % si@@ infrared(R) :- $n>=0 | infrared($n,R).
+
+  s1@@ rbtree($n,R) :- btree($n,R).
+  bz@@ btree(0,R) :- l(R).
+  bs@@ btree($n,R) :- $m=$n-1 | b(tree($m),tree($m),R).
+  r@@  tree($n,R) :- r(btree($n),btree($n),R).
+
+  ts@@ tree($n,R) :- rbtree($n,R).
+
+  i1@@ infrared($n,P) :- tree($n,P).
+  i2@@ infrared($n,P) :- r(tree($n),tree($n),P).
+  t1@@ trees($n,L,R) :- tree($n,L), tree($n,R).
+  t2@@ trees($n,L,R) :- infrared($n,L), tree($n,R).
+  t3@@ trees($n,L,R) :- tree($n,L), infrared($n,R).
+
+  r1@@ rbtree1($n,P) :- rbtree($n,P).
+  r2@@ rbtree1($n,P) :- $m=$n+1 | rbtree($m,P).
+
+  f1@@ tree($m,P) :- $m=$n+1 | balance(L,R,P), trees($n,L,R).
+  f2@@ rbtree1($n,P) :- insert(T,P), rbtree($n,T).
+  f3@@ rbtree1($m,P) :- turnB(T,P), infrared($n,T).
+  f4@@ infrared($n,P) :- insert1(T,P), tree($n,T).
+  f5@@ tree($n,P) :- insert2(T,P), btree($n,T).
+} nonterminal {
+  rbtree(R), rbtree($n,R), btree($n,R), tree($n,R),
+  infrared($n,R), trees($n,L,R), rbtree1($n,R)
+}

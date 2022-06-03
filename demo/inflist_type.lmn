@@ -1,0 +1,7 @@
+defshape inflist(){
+  inflist :- llist=t(rlist).
+  llist=X :- llist=c(X).
+  R=rlist :- R=c(rlist).
+} nonterminal {
+  inflist(), llist(X), rlist(R)
+}

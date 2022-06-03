@@ -1,0 +1,2 @@
+% R=a(plus(a(mul(a(L))))) :- R=a(L).
+R=a(plus(a(L))) :- R=a(L).

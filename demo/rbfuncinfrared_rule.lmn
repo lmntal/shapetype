@@ -1,0 +1,7 @@
+ins11@@ insert1(l,P) :- r(l,l,P).
+ins12@@ insert1(b(L,R),P) :- balance(insert1(L),R,P).
+ins13@@ insert1(b(L,R),P) :- balance(L,insert1(R),P).
+ins14@@ insert1(b(L,R),P) :- b(L,R,P).
+ins15@@ insert1(r(L,R),P) :- r(insert2(L),R,P).
+ins16@@ insert1(r(L,R),P) :- r(L,insert2(R),P).
+ins17@@ insert1(r(L,R),P) :- r(L,R,P).

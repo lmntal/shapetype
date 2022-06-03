@@ -1,0 +1,22 @@
+defshape rbtree(R){
+  s@@ rbtree(R) :- btree(R).
+  bz@@ btree(R) :- l(R).
+  tz@@  tree(R) :- l(R).
+  bs@@ btree(R) :- b(tree,tree,R).
+  ts@@  tree(R) :- b(tree,tree,R).
+  r0@@  tree(R) :- r(btree,btree,R).
+} nonterminal {
+  rbtree(R), btree(R), tree(R)
+}
+
+% % 卒論バージョンの単純赤黒木
+% defshape rbtree(Tree){
+%   prod0@@ rbtree(Parent) :- bnode(Parent).
+%   prod1@@ bnode(Parent) :- leaf(Parent).
+%   prod2@@ bnode(Parent) :- bnode(int,node,node,Parent).
+%   prod3@@ node(Parent) :- leaf(Parent).
+%   prod4@@ node(Parent) :- bnode(int,node,node,Parent).
+%   prod5@@ node(Parent) :- rnode(int,bnode,bnode,Parent).
+% }nonterminal{
+%   bnode(P), node(N)
+% }

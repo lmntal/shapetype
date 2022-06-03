@@ -1,0 +1,2 @@
+% c(c(c(c(c(nil)))),R) % ill-typed
+c(c(c(c(nil))),R) % well-typed

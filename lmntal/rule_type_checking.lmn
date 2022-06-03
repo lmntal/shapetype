@@ -1,0 +1,152 @@
+% set.use.
+% state_space.use.
+n(0), t(0).
+
+% DUMP STATESPACE (by hashimoto)
+Ret = state_space(I, M, S, T) :-
+    Ret = ss(I, M, set.to_list(S), set.to_list(T)).
+Ret = ss(I, M, [$x|S], T) :- int($x) |
+    Ret = ss(I, state_space.state_map_find(M, $x, Res), S, T),
+    state($x, Res).
+
+% nlmem.use.
+copymem@@ copymem({$mem[|*A]},Src,Copy) :- copymem_sub({
+  res=nlmem.copy({$mem[|*A]}).
+  Z=copied(X,Y) :- X=Z, Y='.'.
+  {$p[X|*A]},X='.' :- {$p[X|*A],X=free}.
+}, Src, Copy).
+copymem_sub@@ copymem_sub({res={$p[|*A]},{free('+'),$q[|*B]},@r}/,Src,Copy)
+  :- Src={$p[|*A]},Copy={$q[|*B]}.
+removemem@@ removemem({$p[]}) :- .
+copyrule@@ copyrule({$head[|*H]},{$body[|*B]},H1,B1,R) :- copyrule_sub({[{$head[|*H]}|{$body[|*B]}]},H1,B1,R).
+copyrule_sub@@ copyrule_sub({$rule[]},H1,B1,R) :- copyrule_sub1({$rule[]},{$rule[]},H1,B1,R).
+copyrule_sub1@@ copyrule_sub1({[{$head1[|*H1]}|{$body1[|*B1]}]},{[{$head2[|*H2]}|{$body2[|*B2]}]},H1,B1,R)
+                  :- H1={$head1[|*H1]}, B1={$body1[|*B1]}, R={head{$head2[|*H2]},body{$body2[|*B2]}}.
+
+freestk0@@ freestk([s($id,{$h[|*H]},{$b[|*B]})|T]) :- int($id) | removemem({$h[|*H],$b[|*B]}), freestk(T).
+freestk1@@ freestk([]) :- .
+
+% reduce.run(+X,+Y,+Rs,-R): XからルールセットRsにより遡ってYへ行けるか？
+reduce@@ R=reduce(X,Y), reversedRules(Rs) :- R=reduce.run(X,Y,Rs).
+
+% test(reduce({n_insert1(n_tree,free)},{n_infrared(free)})).
+{
+    module(reduce).
+    redRun@@
+    R = reduce.run({$x[]},{$y[]},Rs) :-
+        R = reduce.exp0(Rs, {$y[]}, [s(ID,{$x[]})|T], T,
+            state_space.state_map_find(state_space.state_map_init, {$x[]}, ID), set.init).
+    redExp0@@
+    R = reduce.exp0(Rs, {$y[]}, H, T, Map, Set) :-
+        R = reduce.exp(Rs, H, T, state_space.state_map_find(Map, {$y[]}, Goal), Set, Goal).
+    redExp@@
+    R = reduce.exp(Rs, [s(ID,{$src[]})|H], T, Map, Set, Goal) :- ID =\= Goal |
+        R = reduce.suc(Rs1, H, T, Exp, Map, Set, Goal),
+        Exp = state_space.react_nd_set(Rs,{$src[]},Rs1).
+    redExp1@@
+    R = reduce.exp(Rs, [s(ID,{$src[]})|H], T, Map, Set, Goal) :- ID =:= Goal |
+        reversedRules(Rs),
+        R = true, reduce.dlist_free(H,T), state_space.state_map_free(Map), set.free(Set).
+    redDlistFree1@@
+    reduce.dlist_free([s(ID,{$p[]})|H],T) :- int(ID) | reduce.dlist_free(H,T).
+    redDlistFree2@@
+    reduce.dlist_free(T,T) :- .
+    % R = reduce.join([],T) :- R = T.
+    % R = reduce.join([H|X],T) :- R = [H|reduce.join(X,T)].
+    redExp2@@
+    R = reduce.exp(Rs, D, D, Map, Set, Goal) :- int(Goal) |
+        reversedRules(Rs),
+        R = false, state_space.state_map_free(Map), set.free(Set).
+    redSuc@@
+    R = reduce.suc(Rs, H, T, Suc, Map, Set, Goal), Suc = [{$dst[]}|Suc1] :-
+        R = reduce.ns0(Rs, H, T, Suc1, s(ID, {$dst[]}), M, Set, Goal),
+        M = state_space.state_map_find(Map, {$dst[]}, ID).
+    redSuc1@@
+    R = reduce.suc(Rs, H, T, [], Map, Set, Goal) :-
+        R = reduce.exp(Rs, H, T, Map, Set, Goal).
+    redNs0@@
+    R = reduce.ns0(Rs, H, T, Suc, s(ID, {$dst[]}), Map, Set, Goal) :- int(ID) |
+        R = reduce.ns(Rs, H, T, Suc, Res, s(ID, {$dst[]}), Map, S, Goal),
+        S = set.find(Set, ID, Res).
+    redNs@@
+    R = reduce.ns(Rs, H, T, Suc, some, s(ID, {$dst[]}), Map, Set, Goal) :- int(ID) |
+        R = reduce.suc(Rs, H, T, Suc, Map, Set, Goal).
+    redNs1@@
+    R = reduce.ns(Rs, H, T, Suc, none, s(ID, {$dst[]}), Map, Set, Goal) :-
+        R = reduce.suc(Rs, H, T1, Suc, Map, Set, Goal), T=[s(ID, {$dst[]})|T1].
+}.
+% MAKESHIFT
+set_empty(set.free) :- .
+
+% run(+ReversedRules, +InitialGraphMem, -Ret)
+run@@Ret = run(Rs, {head{$h[|*H]},body{$b[|*B]}}), n($n) :- $nn = $n+1 |
+    copymem({$h[|*H]},Src,Copy),
+    Ret = exp0(Rs, s(ID, Src,{$b[|*B]}),
+          state_space.state_map_find(state_space.state_map_init, Copy, ID), set.init, set.init), n($nn).
+
+exp0@@Ret = exp0(Rs, S0, Map, Ss, Ts), S0=s($id, {$ini_head[|*H]}, {$ini_body[|*B]}) :- int($id) |
+    Ret = exp(Rs, [s($id, {$ini_head[|*H]}, {$ini_body[|*B]})], Map, set.insert(Ss, $id), Ts), ini($id).
+
+exp@@Ret = exp(Rs, [s($id,H,B)|Stk], Map, Ss, Ts) :- int($id) |
+    Red = reduce(BCopy,HCopy),
+    copymem(H,HSrc,HCopy),copymem(B,BSrc,BCopy),
+    Ret = red(Rs, Stk, Red, p($id,HSrc,BSrc), Map, Ss, Ts).
+
+red@@Ret = red(Rs, Stk, false, p($id,H,B), Map, Ss, Ts) :- int($id) |
+    copyrule(H,B,H1,B1,RMem),
+    Ret = suc(R, Stk, Exp, p($id,H1,B1), Map, Ss, Ts),
+    Exp = react_nd_set(Rs, RMem, R).
+
+red_@@Ret = red({$rs[], @rs}, Stk, true, p($id,{$h[|*H]},{$b[|*B]}), Map, Ss, Ts) :- int($id) |
+    Ret = true,
+    state_space.state_map_free(Map),
+    set.free(Ss), set.free(Ts),
+    freestk(Stk),
+    removemem({$h[|*H],$b[|*B]}).
+
+reactGuard@@ Ret = react_nd_set(Rs, {$p[|*A]}, R) :- Ret = state_space.react_nd_set(Rs,{$p[|*A]}, R).
+
+exp_@@Ret = exp({$rs[], @rs}, [], Map, Ss, Ts), ini(I) :-
+    Ret = state_space(I, Map, Ss, Ts).
+
+suc@@Ret = suc(Rs, Stk, [{head{$dest_head[|*H]},body{$dest_body[|*B]}}|Suc], Src, Map, Ss, Ts) :-
+    M = state_space.state_map_find(Map, Copy, ID),
+    copymem({$dest_head[|*H]},SrcMem,Copy),
+    Ret = ns0(Rs, Stk, Suc, Src, p(ID, SrcMem, {$dest_body[|*B]}), M, Ss, Ts).
+
+suc_@@Ret = suc(Rs, Stk, [], p($id,{$src_head[|*H]},{$src_body[|*B]}), Map, Ss, Ts) :- int($id) |
+    Ret = exp(Rs, Stk, Map, Ss, Ts),
+    removemem({$src_head[|*H],$src_body[|*B]}).
+
+ns0@@Ret = ns0(Rs, Stk, [H|Suc], Src, p($d, D_H, D_B), Map, Ss, Ts) :- int($d) |
+    Ret = ns(Rs, Stk, [H|Suc], Res, Src, p($d, D_H, D_B), Map, S, Ts),
+    S = set.find(Ss, $d, Res).
+
+ns0_@@Ret = ns0({$rs[], @rs}, Stk, [], p($id1,{$h1[|*H1]},{$b1[|*B1]}), p($id2,{$h2[|*H2]},{$b2[|*B2]}), Map, Ss, Ts) :- int($d), int($id1), int($id2) |
+    Ret = false,
+    state_space.state_map_free(Map),
+    set.free(Ss), set.free(Ts),
+    freestk(Stk),
+    removemem({$h1[|*H1],$b1[|*B1]}),
+    removemem({$h2[|*H2],$b2[|*B2]}).
+
+ns@@Ret = ns(Rs, Stk, Suc, some, p($s, SrcHead, SrcBody), p($d, DstHead, DstBody), Map, Ss, Ts) :-
+    int($s), int($d) |
+    Ret = nt(Rs, Stk, Suc, Res, p($s, SrcHead, SrcBody), p($d, DstHead, DstBody), Map, Ss, T),
+    T = set.find(Ts, '.'($s, $d), Res).
+
+ns_@@Ret = ns(Rs, Stk, Suc, none, p($s, SrcHead, SrcBody), p($d, DstHead, DstBody), Map, Ss, Ts), n($n), t($t) :-
+    int($s), int($d), $nn=$n+1, $tt=$t+1|
+    Ret = suc(Rs, [s($d, DstHead, DstBody)|Stk], Suc, p($s, SrcHead, SrcBody), Map, S, T),
+    S = set.insert(Ss, $d), T = set.insert(Ts, '.'($s, $d)),
+    n($nn), t($tt).
+
+nt@@Ret = nt(Rs, Stk, Suc, some, Src, p($d, {$dest_head[|*H]}, {$dest_body[|*B]}), Map, Ss, Ts) :-
+    int($d) |
+    Ret = suc(Rs, Stk, Suc, Src, Map, Ss, Ts),
+    removemem({$dest_head[|*H], $dest_body[|*B]}).
+
+nt_@@Ret = nt(Rs, Stk, Suc, none, p($s, SrcHead, SrcBody), p(D, {$dest_head[|*H]}, {$dest_body[|*B]}), Map, Ss, Ts), t($t) :-
+    int($s), $tt=$t+1 |
+    Ret = suc(Rs, Stk, Suc, p($s, SrcHead, SrcBody), Map, Ss, set.insert(Ts, '.'($s, D))), t($tt), 
+    removemem({$dest_head[|*H], $dest_body[|*B]}).

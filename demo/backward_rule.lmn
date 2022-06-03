@@ -1,0 +1,2 @@
+acquire_lock@@ proc, lock :- locked_proc.
+release_lock@@ locked_proc :- proc, lock.

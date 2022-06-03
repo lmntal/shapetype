@@ -1,0 +1,14 @@
+% red-black tree
+defshape rbtree(R){
+  init@@ rbtree(R) :- $n>=0 | btree($n,R).
+  bb@@ btree($n,R)
+    :- $m+1 = $n | b(tree($m),tree($m),R).
+  bl@@ btree(0,R) :- l(R).
+  tb@@ tree($n,R)
+    :- $m+1 = $n | b(tree($m),tree($m),R).
+  tr@@ tree($n,R)
+    :- r(btree($n),btree($n),R).
+  tl@@ tree(0,R) :- l(R).
+} nonterminal {
+  rbtree(R), btree($n,R), tree($n,R)
+}

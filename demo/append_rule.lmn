@@ -1,0 +1,6 @@
+% append(cons(N,X),Y,R) :- cons(N,append(X,Y),R)
+% append(nil,Y,R) :- cons(Y,R) % =アトムが欲しい
+
+a1@@ R=append(c(L1),L2)
+      :- R=c(append(L1,L2)).
+a2@@ R=append(n,L) :- R=L.

@@ -1,0 +1,3 @@
+% bnode(int,Subtree,leaf,Parent):-bnode(int,Subtree,rnode(int,leaf,leaf),Parent)
+b(S,l,R) :- b(S,r(l,l),R). % simple insert
+b(A,B,R) :- b(B,A,R). % flip

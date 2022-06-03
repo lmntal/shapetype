@@ -1,0 +1,48 @@
+% defshape s(){
+%   s0@@ s :- w(t0(a(L)),L).
+%   s1@@ s :- w(t1(a(L)),L).
+%   a0@@ H = a(T) :- H = t0(a(T)).
+%   a1@@ H = a(T) :- H = t1(a(T)).
+%   ab@@ H = a(T) :- H = hyphen(L), b(L,T,H1,T1), w(H1,T1).
+%   b0@@ b(H0,T0,H1,T1) :- H0=t0(L0), H1=t0(L1), b(L0,T0,L1,T1).
+%   b1@@ b(H0,T0,H1,T1) :- H0=t1(L0), H1=t1(L1), b(L0,T0,L1,T1).
+%   bc@@ b(H0,T0,H1,T1) :- H0=t1(L0), H1=t1(L1), c(L0,T0,L1,T1).
+%   c0@@ c(H0,T0,H1,T1) :- H0=t0(L0), H1=t0(L1), c(L0,T0,L1,T1).
+%   c1@@ c(H0,T0,H1,T1) :- H0=t1(L0), H1=t1(L1), c(L0,T0,L1,T1).
+%   cb@@ c(H0,T0,H1,T1) :- H0=L0, H1 = hyphen(L1), b(L1,T1,H2,T2), w(H2,T2).
+%   cd@@ c(H0,T0,H1,T1) :- H0=L0, H1 = hyphen(d(T1)).
+%   d0@@ H = d(T) :- H = t0(d(T)).
+%   d1@@ H = d(T) :- H = t1(d(T)).
+%   e0@@ H = d(T) :- H = t0(T).
+%   e1@@ H = d(T) :- H = t1(T).
+% } nonterminal {
+%   s, a(T,H), b(H0,T0,H1,T1), c(H0,T0,H1,T1), d(T,H)
+% }
+
+defshape s(){
+  s0@@ s :- w(t0(a)).
+  s1@@ s :- w(t1(a)).
+  a0@@ H = a :- H = t0(a).
+  a1@@ H = a :- H = t1(a).
+  ab@@ H = a :- H = hyphen(L), b(L,w).
+
+  b0@@ b(H0,H1) :- H0=t0(L0), H1=t0(L1), b(L0,L1).
+  b1@@ b(H0,H1) :- H0=t0(L0), H1=t1(L1), b(L0,L1).
+  b2@@ b(H0,H1) :- H0=t1(L0), H1=t0(L1), b(L0,L1).
+  b3@@ b(H0,H1) :- H0=t1(L0), H1=t1(L1), b(L0,L1).
+  bc@@ b(H0,H1) :- H0=t1(L0), H1=t1(L1), c(L0,L1).
+
+  c0@@ c(H0,H1) :- H0=t0(L0), H1=t0(L1), c(L0,L1).
+  c1@@ c(H0,H1) :- H0=t0(L0), H1=t1(L1), c(L0,L1).
+  c2@@ c(H0,H1) :- H0=t1(L0), H1=t0(L1), c(L0,L1).
+  c3@@ c(H0,H1) :- H0=t1(L0), H1=t1(L1), c(L0,L1).
+
+  cb@@ c(H0,H1) :- H0=nil, H1=hyphen(L1), b(L1,w).
+  cd@@ c(H0,H1) :- H0=nil, H1=hyphen(d).
+  d0@@ H = d :- H = t0(d).
+  d1@@ H = d :- H = t1(d).
+  e0@@ H = d :- H = t0(nil).
+  e1@@ H = d :- H = t1(nil).
+} nonterminal {
+  s, a(H), b(H0,H1), c(H0,H1), d(H)
+}

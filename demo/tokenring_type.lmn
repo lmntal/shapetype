@@ -1,0 +1,15 @@
+% generates "t" at first 
+defshape tokenring(){
+  tokenring :- X=ns(t(X)).
+  R=ns(L) :- R=n(ns(L)).
+  R=ns(L) :- R=ns(n(L)).
+  R=ns(L)  :- R=n(L).
+}
+
+% % generates "t" at last
+% defshape tokenring(){
+%   tokenring :- X=ns(X).
+%   R=ns(L) :- R=n(ns(L)).
+%   R=ns(L) :- R=ns(n(L)).
+%   R=ns(L)  :- R=t(L).
+% }

@@ -1,0 +1,2 @@
+R=t(n(L)) :- R=n(t(L)). % false-negative
+R=t(n(tokenring2(R))) :- R=n(t(tokenring2(R))). % with hint

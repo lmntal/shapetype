@@ -1,0 +1,6 @@
+defshape dbl_list(R) {
+    R = dbl_list :- R = dbl_list(nodes(Tail, RevHead, RevTail), Tail, RevHead, RevTail).
+    R = nodes(Tail, Head, Prev) :- R = cons(This, nodes(Tail, Head, This), Prev).
+    % R = nodes(Tail, Head, Prev) :- R = Head, Prev = Tail. % connector があって面倒なので↓の方にした．
+    R = nodes(Tail, Head, Prev) :- R = cons(Tail, Head, Prev).
+}

@@ -1,0 +1,16 @@
+defshape list10(R){
+  list10(R) :- list10sub(s(s(s(s(s(s(s(s(s(s(z)))))))))),R).
+  list10sub(z,R) :- n(R).
+  list10sub(s(N),R) :- c(list10sub(N),R).
+  list10sub(s(N),R) :- list10sub(N,R).
+  list5(R) :- list5sub(s(s(s(s(s(z))))),R).
+  list5sub(z,R) :- n(R).
+  list5sub(s(N),R) :- c(list5sub(N),R).
+  list5sub(s(N),R) :- list5sub(N,R).
+  list10(R) :- append(list5,list5,R).
+} nonterminal {
+  list10(R), list10sub(N,R),
+  s(N,R), z(R),
+  list5(R), list5sub(N,R),
+  s(N,R), z(R)
+}

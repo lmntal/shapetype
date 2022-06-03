@@ -1,0 +1,10 @@
+% defshape skiplist(List1,List2){
+%   prod0@@ skiplist(L1,L2) :- nil(L1,L2).
+%   prod1@@ nil(L1,L2) :- node1(X1,L1),nil(X1,L2).
+%   prod2@@ nil(L1,L2) :- node2(X1,X2,L1,L2),nil(X1,X2).
+% }
+defshape skiplist(List1,List2){
+  prod0@@ skiplist(L1,L2) :- nil(L1,L2).
+  prod1@@ skiplist(L1,L2) :- node1(X1,L1),skiplist(X1,L2).
+  prod2@@ skiplist(L1,L2) :- node2(X1,X2,L1,L2),skiplist(X1,X2).
+}

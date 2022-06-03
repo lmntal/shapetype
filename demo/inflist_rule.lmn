@@ -1,0 +1,2 @@
+llist=t(c(rlist)) :- llist=c(t(rlist)). // move R
+llist=c(t(rlist)) :- llist=t(c(rlist)). // move L

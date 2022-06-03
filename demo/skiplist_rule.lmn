@@ -1,0 +1,8 @@
+% node2(X1,Y1,X,Y), node2(X2,Y2,X1,Y1) :- node1(X1,X), node2(X2,Y2,X1,Y)
+
+% graph type checking
+skiplist(X,Y)
+  :- node1(node1(L0),X),node2(L1,node2(node1(L2),node2(L3,node2(L4,node2(node1(L5),node2(node1(L6),nil(L6),L5),L4),L3),L2),L1),L0,Y).
+
+% JSSSTに書かれていた以下のルールは型を保存しない！！！！！！！！
+% node2(X1,Y1,X,Y), node2(X2,Y2,X1,Y1) :- node1(X1,X), node2(X2,Y,X1,Y2)

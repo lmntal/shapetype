@@ -1,0 +1,14 @@
+defshape list(R){
+  R=list :- R=c(list).
+  R=list :- R=n.
+  R=list :- R=dlfastener.
+  R=dlfastener :- R=f(X,X,bool).
+  R=dlfastener :- R=f(dlist(Y),Y,bool).
+  R=bool :- R=f.
+  R=bool :- R=t.
+  R=dlist(X) :- R=c(X).
+  R=dlist(X) :- R=c(dlist(X)).
+  R=dlist(X) :- R=dlist(c(X)).
+}nonterminal{
+  dlist(X,R), bool(R), dlfastener(R)
+}

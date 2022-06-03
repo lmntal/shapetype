@@ -1,0 +1,2 @@
+append(c(X),Y,R) :- c(append(X,Y),R)
+% append(n,L,R) :- L=R

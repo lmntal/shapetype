@@ -1,0 +1,97 @@
+% ins21@@ insert2(l,P) :- r(l,l,P).
+% ins22@@ insert2(b(L,R),P) :- balance(insert1(L),R,P).
+% ins23@@ insert2(b(L,R),P) :- balance(L,insert1(R),P).
+% ins24@@ insert2(b(L,R),P) :- b(L,R,P).
+
+% % following rules will not fire
+% % insert2(r(L,R),P) :- r(insert2(L),R,P).
+% % insert2(r(L,R),P) :- r(L,insert2(R),P).
+% % insert2(r(L,R),P) :- r(L,R,P).
+
+% % balance(r(r(A,B),C),D,P) :- r(b(A,B),b(C,D),P).
+% % balance(r(A,r(B,C)),D,P) :- r(b(A,B),b(C,D),P).
+% % balance(A,r(B,r(C,D)),P) :- r(b(A,B),b(C,D),P).
+% % balance(A,r(r(B,C),D),P) :- r(b(A,B),b(C,D),P).
+% % balance(A,r(r(B,C),D),P) :- r(b(A,B),b(C,D),P).
+% % balance(A,r(r(B,C),D),P) :- r(b(A,B),b(C,D),P).
+% % balance(l,l,P) :- b(l,l,P).
+% % balance(b(A,B),b(C,D),P) :- b(b(A,B),b(C,D),P).
+
+
+
+% % % l b(A,B) r(l,l) r(l,b(A,B)) r(b(A,B),l) r(b(A,B),b(C,D))
+% % % balance(l,b(A,B),P) :- b(l,b(A,B),P).
+% % balance(l,r(l,l),P) :- b(l,r(l,l),P).
+% % balance(l,r(l,b(A,B)),P) :- b(l,r(l,b(A,B)),P).
+% % balance(l,r(b(A,B),l),P) :- b(l,r(b(A,B),l),P).
+% % balance(l,r(b(A,B),b(C,D)),P) :- b(l,r(b(A,B),b(C,D)),P).
+% % % balance(b(A,B),l,P) :- b(b(A,B),l,P).
+% % balance(b(A,B),r(l,l),P) :- b(b(A,B),r(l,l),P).
+% % balance(b(A,B),r(l,b(C,D)),P) :- b(b(A,B),r(l,b(C,D)),P).
+% % balance(b(A,B),r(b(C,D),l),P) :- b(b(A,B),r(b(C,D),l),P).
+% % balance(b(A,B),r(b(C,D),b(E,F)),P) :- b(b(A,B),r(b(C,D),b(E,F)),P).
+% % balance(r(l,l),l,P) :- b(r(l,l),l,P).
+% % balance(r(l,l),b(A,B),P) :- b(r(l,l),b(A,B),P).
+% % balance(r(l,l),r(l,l),P) :- b(r(l,l),r(l,l),P).
+% % balance(r(l,l),r(l,b(A,B)),P) :- b(r(l,l),r(l,b(A,B)),P).
+% % balance(r(l,l),r(b(A,B),l),P) :- b(r(l,l),r(b(A,B),l),P).
+% % balance(r(l,l),r(b(A,B),b(C,D)),P) :- b(r(l,l),r(b(A,B),b(C,D)),P).
+% % balance(r(l,b(A,B)),l,P) :- b(r(l,b(A,B)),l,P).
+% % % balance(r(l,b(A,B)),b(A,B),P) :- b(r(l,b(A,B)),b(A,B),P).
+% % balance(r(l,b(A,B)),r(l,l),P) :- b(r(l,b(A,B)),r(l,l),P).
+% % % balance(r(l,b(A,B)),r(l,b(A,B)),P) :- b(r(l,b(A,B)),r(l,b(A,B)),P).
+% % % balance(r(l,b(A,B)),r(b(A,B),l),P) :- b(r(l,b(A,B)),r(b(A,B),l),P).
+% % % balance(r(l,b(A,B)),r(b(A,B),b(C,D)),P) :- b(r(l,b(A,B)),r(b(A,B),b(C,D)),P).
+% % balance(r(b(A,B),l),l,P) :- b(r(b(A,B),l),l,P).
+% % % balance(r(b(A,B),l),b(A,B),P) :- b(r(b(A,B),l),b(A,B),P).
+% % balance(r(b(A,B),l),r(l,l),P) :- b(r(b(A,B),l),r(l,l),P).
+% % % balance(r(b(A,B),l),r(l,b(A,B)),P) :- b(r(b(A,B),l),r(l,b(A,B)),P).
+% % % balance(r(b(A,B),l),r(b(A,B),l),P) :- b(r(b(A,B),l),r(b(A,B),l),P).
+% % % balance(r(b(A,B),l),r(b(A,B),b(C,D)),P) :- b(r(b(A,B),l),r(b(A,B),b(C,D)),P).
+% % balance(r(b(A,B),b(C,D)),l,P) :- b(r(b(A,B),b(C,D)),l,P).
+% % % balance(r(b(A,B),b(C,D)),b(A,B),P) :- b(r(b(A,B),b(C,D)),b(A,B),P).
+% % balance(r(b(A,B),b(C,D)),r(l,l),P) :- b(r(b(A,B),b(C,D)),r(l,l),P).
+% % % balance(r(b(A,B),b(C,D)),r(l,b(A,B)),P) :- b(r(b(A,B),b(C,D)),r(l,b(A,B)),P).
+% % % balance(r(b(A,B),b(C,D)),r(b(A,B),l),P) :- b(r(b(A,B),b(C,D)),r(b(A,B),l),P).
+% % % balance(r(b(A,B),b(C,D)),r(b(A,B),b(C,D)),P) :- b(r(b(A,B),b(C,D)),r(b(A,B),b(C,D)),P).
+
+% bal01@@ balance(r(r(A,B),C),D,P) :- r(b(A,B),b(C,D),P).
+% bal02@@ balance(r(A,r(B,C)),D,P) :- r(b(A,B),b(C,D),P).
+% bal03@@ balance(A,r(B,r(C,D)),P) :- r(b(A,B),b(C,D),P).
+% bal04@@ balance(A,r(r(B,C),D),P) :- r(b(A,B),b(C,D),P).
+% bal05@@ balance(l,l,P) :- b(l,l,P).
+% bal06@@ balance(l,b(A,B),P) :- b(l,b(A,B),P).
+% bal07@@ balance(l,r(l,l),P) :- b(l,r(l,l),P).
+% bal08@@ balance(l,r(l,b(A,B)),P) :- b(l,r(l,b(A,B)),P).
+% bal09@@ balance(l,r(b(A,B),l),P) :- b(l,r(b(A,B),l),P).
+% bal10@@ balance(l,r(b(A,B),b(C,D)),P) :- b(l,r(b(A,B),b(C,D)),P).
+% bal11@@ balance(b(A,B),l,P) :- b(b(A,B),l,P).
+% bal12@@ balance(b(A,B),b(C,D),P) :- b(b(A,B),b(C,D),P).
+% bal13@@ balance(b(A,B),r(l,l),P) :- b(b(A,B),r(l,l),P).
+% bal14@@ balance(b(A,B),r(l,b(C,D)),P) :- b(b(A,B),r(l,b(C,D)),P).
+% bal15@@ balance(b(A,B),r(b(C,D),l),P) :- b(b(A,B),r(b(C,D),l),P).
+% bal16@@ balance(b(A,B),r(b(C,D),b(E,F)),P) :- b(b(A,B),r(b(C,D),b(E,F)),P).
+% bal17@@ balance(r(l,l),l,P) :- b(r(l,l),l,P).
+% bal18@@ balance(r(l,l),b(A,B),P) :- b(r(l,l),b(A,B),P).
+% bal19@@ balance(r(l,l),r(l,l),P) :- b(r(l,l),r(l,l),P).
+% bal20@@ balance(r(l,l),r(l,b(A,B)),P) :- b(r(l,l),r(l,b(A,B)),P).
+% bal21@@ balance(r(l,l),r(b(A,B),l),P) :- b(r(l,l),r(b(A,B),l),P).
+% bal22@@ balance(r(l,l),r(b(A,B),b(C,D)),P) :- b(r(l,l),r(b(A,B),b(C,D)),P).
+% bal23@@ balance(r(l,b(A,B)),l,P) :- b(r(l,b(A,B)),l,P).
+% bal24@@ balance(r(l,b(A,B)),b(C,D),P) :- b(r(l,b(A,B)),b(C,D),P).
+% bal25@@ balance(r(l,b(A,B)),r(l,l),P) :- b(r(l,b(A,B)),r(l,l),P).
+% bal26@@ balance(r(l,b(A,B)),r(l,b(C,D)),P) :- b(r(l,b(A,B)),r(l,b(C,D)),P).
+% bal27@@ balance(r(l,b(A,B)),r(b(C,D),l),P) :- b(r(l,b(A,B)),r(b(C,D),l),P).
+% bal28@@ balance(r(l,b(A,B)),r(b(C,D),b(E,F)),P) :- b(r(l,b(A,B)),r(b(C,D),b(E,F)),P).
+% bal29@@ balance(r(b(A,B),l),l,P) :- b(r(b(A,B),l),l,P).
+% bal30@@ balance(r(b(A,B),l),b(C,D),P) :- b(r(b(A,B),l),b(C,D),P).
+% bal31@@ balance(r(b(A,B),l),r(l,l),P) :- b(r(b(A,B),l),r(l,l),P).
+% bal32@@ balance(r(b(A,B),l),r(l,b(C,D)),P) :- b(r(b(A,B),l),r(l,b(C,D)),P).
+% bal33@@ balance(r(b(A,B),l),r(b(C,D),l),P) :- b(r(b(A,B),l),r(b(C,D),l),P).
+% bal34@@ balance(r(b(A,B),l),r(b(C,D),b(E,F)),P) :- b(r(b(A,B),l),r(b(C,D),b(E,F)),P).
+% bal35@@ balance(r(b(A,B),b(C,D)),l,P) :- b(r(b(A,B),b(C,D)),l,P).
+bal36@@ balance(r(b(A,B),b(C,D)),b(E,F),P) :- b(r(b(A,B),b(C,D)),b(E,F),P).
+bal37@@ balance(r(b(A,B),b(C,D)),r(l,l),P) :- b(r(b(A,B),b(C,D)),r(l,l),P).
+bal38@@ balance(r(b(A,B),b(C,D)),r(l,b(E,F)),P) :- b(r(b(A,B),b(C,D)),r(l,b(E,F)),P).
+bal39@@ balance(r(b(A,B),b(C,D)),r(b(E,F),l),P) :- b(r(b(A,B),b(C,D)),r(b(E,F),l),P).
+bal40@@ balance(r(b(A,B),b(C,D)),r(b(E,F),b(G,H)),P) :- b(r(b(A,B),b(C,D)),r(b(E,F),b(G,H)),P).

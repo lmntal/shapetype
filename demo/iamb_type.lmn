@@ -1,0 +1,21 @@
+% 本質的に曖昧な言語（Inherently ambiguous language）
+% S ::= AB CC | AA BC
+% AB ::= a AB b | a b
+% CC ::= CC c | c
+% AA ::= AA a | a
+% BC ::= b BC c | b c
+defshape iamb(L,R){
+  iamb(L,R) :- ab(cc(L),R).
+  iamb(L,R) :- aa(bc(L),R).
+  ab(L,R) :- a(ab(b(L)),R).
+  ab(L,R) :- a(b(L),R).
+  cc(L,R) :- cc(c(L),R).
+  cc(L,R) :- c(L,R).
+  aa(L,R) :- aa(a(L),R).
+  aa(L,R) :- a(L,R).
+  bc(L,R) :- b(bc(c(L)),R).
+  bc(L,R) :- b(c(L),R).
+} nonterminal {
+  ab(L,R), cc(L,R),
+  aa(L,R), bc(L,R)
+}

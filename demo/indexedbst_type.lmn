@@ -1,0 +1,26 @@
+% binary search tree
+defshape bst(R) {
+  bst(R) :- nil(R).
+  bst(R) :- node($x,ltree($x),rtree($x),R).
+  ltree($r,R) :- nil(R).
+  ltree($r,R) :- $x < $r
+    | node($x,ltree($x),mtree($x,$r),R).
+  mtree($l,$r,R) :- nil(R).
+  mtree($l,$r,R) :- $l =< $x, $x < $r
+    | node($x,mtree($l,$x),mtree($x,$r),R).
+  rtree($l,R) :- nil(R).
+  rtree($l,R) :- $l =< $x
+    | node($x,mtree($l,$x),rtree($x),R).
+} nonterminal {
+  ltree($r,R), mtree($l,$r,R), rtree($l,R),
+}
+
+% % 定数として無限大 $inf を導入すれば、より簡潔にルール3本で書ける
+% defshape bst(R) {
+%   R = bst :- R = tree(-$inf,$inf).
+%   R = tree($l,$r) :- R = nil.
+%   R = tree($l,$r) :- $l <= $x, $x < $r
+%     | R = node($x,tree($l,$x),tree($x,$r)).
+% } nonterminal {
+%   tree($l,$r,R)
+% }

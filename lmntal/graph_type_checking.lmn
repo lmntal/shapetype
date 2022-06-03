@@ -1,0 +1,231 @@
+map=state_space.state_map_init.
+
+// reduce begin
+reduce_init@@
+Ret=reduce({rule({$l},{$r},{$c})}) :- Ret=reduce_sub({rule({$l,flink=[],proxy=[]},{$r,flink=[],proxy=[]},{$c,l=[],r=[]})}).
+
+reduce_sub1@@
+Ret=reduce_sub({rule({$l[X,FL|*L], flink=FL},{$r[X,FR|*R], flink=FR},{$c})})
+  :-
+Ret=reduce_sub({rule({$l[X,FL|*L], flink=[X|FL]},{$r[Y,FR|*R], flink=[Y|FR]},{$c})}).
+
+reduce_sub2@@
+Ret=reduce_sub({rule({$l[X,FL|*L], proxy=FL},{$r},{$c[X,FR|*L], l=FR})})
+  :-
+Ret=reduce_sub({rule({$l[X,FL|*L], proxy=[X|FL]},{$r},{$c[Y,FR|*R], l=[Y|FR]})}).
+
+reduce_sub3@@
+Ret=reduce_sub({rule({$l},{$r[X,FL|*L], proxy=FL},{$c[X,FR|*L], r=FR})})
+  :-
+Ret=reduce_sub({rule({$l},{$r[X,FL|*L], proxy=[X|FL]},{$c[Y,FR|*R], r=[Y|FR]})}).
+
+reduce_sub4@@
+Ret=reduce_sub({rule({$l[]},{$r[]},{$c[]})})
+  :-
+Ret=reduce_sub2({rule({$l[]},{$r[]},{$c[]})}).
+
+reduce_sub5@@
+Ret=reduce_sub2({rule({$l[X,FL|*L], proxy=[X|FL]},{$r},{$c[Y,FR|*R], l=[Y|FR]})})
+  :-
+Ret=reduce_sub2({rule({$l[X,FL|*L], proxy=FL},{$r},{$c[X,FR|*L], l=FR})}).
+
+reduce_sub6@@
+Ret=reduce_sub2({rule({$l},{$r[X,FL|*L], proxy=[X|FL]},{$c[Y,FR|*R], r=[Y|FR]})})
+  :-
+Ret=reduce_sub2({rule({$l},{$r[X,FL|*L], proxy=FL},{$c[X,FR|*L], r=FR})}).
+
+reduce_main@@
+Ret=reduce_sub2({rule({$l,proxy=[]},{$r,proxy=[]},{$c,l=[],r=[]})})
+  :-
+Ret=reduce_main({rule({$l},{$r},{$c})}).
+
+reduce@@ R=reduce_main({$rule[]}), reversedRules={@r}, eliminateRules={@e}, map=Map :- class(Map,"state_map") | R=reduce{
+  st1,
+  dest = DestID,
+  Map1 = getlhsID(Map,{$rule[]},DestID,Rule1),
+  map  = getrhsID(Map1,Rule1,SrcID,Rule2),
+  stk  = [p(Rule2,SrcID)],
+  set  = set.init,
+  rules = {@r},
+  eliminateRules = {@e},
+  states=0,
+  stdout=io.stdout,
+  stdin=io.stdin.
+
+  // getlhsID(+Map,+Rule,-ID,-RetRule,-RetMap)
+  getlhsID@@ Ret=getlhsID(Map,Rule,ID,RetRule)
+    :- Ret=getlhsIDsub(Map,LHS,ID), getlhs(Rule,RetRule,LHS).
+  getlhsIDsub@@ Ret=getlhsIDsub(Map,{$lhs[]},ID)
+    :- Ret=state_space.state_map_find(Map,{$lhs[]},ID).
+
+  // getrhsID(+Map,+Rule,-ID,-RetRule,-RetMap)
+  getrhsID@@ Ret=getrhsID(Map,Rule,ID,RetRule)
+    :- Ret=getrhsIDsub(Map,RHS,ID), getrhs(Rule,RetRule,RHS).
+  getrhsIDsub@@ Ret=getrhsIDsub(Map,{$rhs[]},ID)
+    :- Ret=state_space.state_map_find(Map,{$rhs[]},ID).
+
+  // getlhs(+Rule, -RetRule, -LHS)
+  getlhs@@
+  Ret=getlhs({rule({$l},{$r},{$c})},Res)
+    :- copymem({$l},Src,Copy), Ret=getlhs1(Src,Copy,{$r},{$c},Res).
+
+  getlhs1@@
+  Ret=getlhs1({$src},{$copy},{$r},{$c},Res)
+    :- Ret={$copy}, Res={rule({$src},{$r},{$c})}.
+
+  // getrhs(+Rule, -RetRule, -RHS)
+  getrhs@@
+  Ret=getrhs({rule({$l},{$r},{$c})},Res)
+    :- copymem({$r},Src,Copy), Ret=getrhs1(Src,Copy,{$l},{$c},Res).
+
+  getrhs1@@
+  Ret=getrhs1({$src},{$copy},{$l},{$c},Res)
+    :- Ret={$copy}, Res={rule({$l},{$src},{$c})}.
+
+  copymem@@
+  copymem({$mem},Src,Copy)
+    :- 
+  copymem_sub({
+    res=nlmem.copy({$mem}).
+    Z=copied(X,Y) :- X=Z, Y='.'.
+    {$p[X|*A]},X='.' :- {$p[X|*A],X=free}.
+  }, Src, Copy).
+
+  copymem_sub@@
+  copymem_sub({res={$p},{free('+'),$q},@r}/,Src,Copy)
+    :- Src={$p},Copy={$q}.
+  
+  // if (stk == []) return false;
+  reduce_st1_empty@@
+  st1, stk=[] :- ret=false.
+
+  // p(x,id_x) = pop(); set.insert(id_x);
+  reduce_st1@@
+  st1, stk=[p({$x[]},X)|T], states=N, set=Set
+    :- int(X), N1=N+1 |
+  st2, stk=T, px=p({$x[]},X), states=N1, set=set.insert(Set,X).
+
+  // if (id_x =:= dest.id) return true;
+  reduce_st2_found@@
+  st2, px=p({$x[]},X), dest=Y :- X =:= Y | st22, px=p({$x[]},X), dest=Y, ans=check({$x[]}).
+
+  check@@
+  Ret=check({rule({$l[X,FL|*A],flink=[X|FL]},{$r[Y,FR|*B],flink=[Y|FR]},{$c})})
+    :-
+  Ret=check({rule({$l[X,FL|*A],flink=FL},{$r[X,FR|*B],flink=FR},{$c})}).
+
+  check_@@
+  Ret=check({rule({$l,flink=[]},{$r,flink=[]},{$c})})
+    :-
+  Ret=check1({rule({$l},{$r},{$c})}).
+
+  check1@@
+  Ret=check1({rule({$l},{$r},{$c})}), eliminateRules={@e}
+    :- 
+  Ret=check2({rule({$l},{$r},{$c}),@e}), eliminateRules={@e}.
+
+  check2@@
+  Ret=check2({rule({},{},{$c}),@e})
+    :-
+  Ret=check21({$c.
+    next=0.
+    next=N, {$p} :- N1=N+1 | done{id(N),$p}, next=N1.
+  }).
+
+  check2@@
+  Ret=check21({$c,@r}/)
+    :-
+  Ret=check3([],[],{$c.
+    done{$p} :- {$p}.
+    R=v(L), {L=v, id(N), $p} :- int(N) | R=string.concat("$v",string.from(N)), {$p, id(N)}.
+    R=op(A,B,C) :- R=string.concat(A,string.concat(B,C)).
+    {proxy(L),$p},{proxy(L),$q} :- post(op(v(A),"=",v(B))), {A=v,$p}, {B=v,$q}.
+    {id(N)} :- int(N) | .
+  }).
+
+  print@@
+  Ret=print(Stdout,S) :- Ret=io.print_line(Stdout,string.concat("Z3QUERY:",S)).
+
+  check3_pre@@
+  Ret=check3(Pre,Post,{pre=S,$p,@er})
+    :- string(S) | Ret=check3([S|Pre],Post,{$p,@er}).
+  check3_post@@
+  Ret=check3(Pre,Post,{post=S,$p,@er})
+    :- string(S) | Ret=check3(Pre,[S|Post],{$p,@er}).
+  check3_postempty@@ // buggy if in mc mode
+  Ret=check3(Pre,[],{$p,@er}) 
+    :- ground(Pre) | gc({$p}), Ret=true.
+  check3@@ % buggy: mem at 3rd arg must be empty
+  Ret=check3(Pre,[S|Post],{$p,@er}), stdout=Stdout
+    :- Ret=check4(Pre,[S|Post]), gc({$p}), stdout=print(Stdout,"IF").
+  check4_@@
+  Ret=check4([S|Pre],Post), stdout=Stdout
+    :- Ret=check4(Pre,Post), stdout=print(Stdout,S).
+  check4@@
+  Ret=check4([],Post), stdout=Stdout
+    :- Ret=check5(Post), stdout=print(Stdout,"THEN").
+  check5_@@
+  Ret=check5([S|Post]), stdout=Stdout
+    :- Ret=check5(Post), stdout=print(Stdout,S).
+  check5@@
+  Ret=check5([]), stdout=Stdout
+    :- Ret=check6, stdout=print(Stdout,"FI").
+  check6_@@
+  Ret=check6, stdin=Stdin :- Ret=check6(io.read_line(Stdin, P)), stdin=P.
+  check6_true@@
+  Ret=check6("true") :- Ret=true.
+  check6@@
+  Ret=check6("false") :- Ret=false.
+
+  reduce_st22_true@@
+  st22, ans=true :- ret=true.
+
+  reduce_st22@@
+  st22, ans=false :- st21.
+
+  reduce_st2@@
+  st2, px=p({$x[]},X), dest=Y :- X =\= Y | st21, px=p({$x[]},X), dest=Y.
+
+  // nexts = getNext(x,ps);
+  reduce_st21@@
+  st21, px=p({$x[]},X), rules={@r}
+    :- 
+  st3, px=p({$x[]},X), nexts=state_space.react_nd_set({@r}, {$x[]}, rules).
+
+  reduce_st3_empty@@
+  st3, px=p({$x[]},X), nexts=[] :- int(X) | st1.
+
+  // for (next of nexts) { pn = p(next, getID(map,next));
+  reduce_st3@@
+  st3, nexts=[{$n[]}|T], map=Map
+    :-
+  st4, nexts=T, pn=p(Rule,NID),
+  map = getrhsID(Map, {$n[]}, NID, Rule).
+
+  reduce_st4@@
+  st4, pn=p({$n[]},N), set=Set
+    :- int(N) |
+  st5, pn=p({$n[]},N), set=set.find(Set, N, found).
+
+  // if (pn.id in set) continue;
+  // TODO: this is not accurate
+  reduce_st5_already@@
+  st5, found=some, pn=p({$n[]},N) :- int(N) | st3.
+  
+  reduce_st5@@
+  st5, found=none, stk=Stk, pn=p({$n[]},N) :- st3, stk=[p({$n[]},N)|Stk].
+
+  reduce_gc_set@@
+  ret=R, set=Set :- ret=R, set.free(Set).
+
+  reduce_gc_stk_empty@@
+  ret=R, stk=[] :- ret=R.
+
+  reduce_gc_stk@@
+  ret=R, stk=[p({$x[]},X)|T] :- int(X) | ret=R, stk=T.
+}.
+reduce_end@@
+R=reduce{ret=$ret, map=Map, rules={@r}, eliminateRules={@e}, states=N, $p[], @rest}
+  :- unary($ret), class(Map, "state_map"), int(N) |
+R=$ret, map=Map, reversedRules={@r}, eliminateRules={@e}, reduce_states=N.
+// reduce end

@@ -1,0 +1,16 @@
+// APLAS2019版赤黒木
+defshape rbtree(R){
+  s@@ rbtree(R) :- btree(nat,R).
+  bz@@ btree(z,R) :- l(R).
+  tz@@  tree(z,R) :- l(R).
+  bs@@ btree(s(N),R) :- b(tree(N1),tree(N2),R), cp(N,N1,N2).
+  ts@@  tree(s(N),R) :- b(tree(N1),tree(N2),R), cp(N,N1,N2).
+  r@@  tree(N,R) :- r(btree(N1),btree(N2),R), cp(N,N1,N2).
+  ns@@ nat(R) :- s(nat,R).
+  nz@@ nat(R) :- z(R).
+  cs@@ cp(s(N),N1,N2) :- cp(N,M1,M2), s(M1,N1), s(M2,N2).
+  cz@@ cp(z,N1,N2) :- z(N1), z(N2).
+} nonterminal {
+  rbtree(R), btree(N,R), tree(N,R),
+  cp(N,N1,N2), nat(R), s(N,R), z(R)
+}

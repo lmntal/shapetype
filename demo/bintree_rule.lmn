@@ -1,0 +1,2 @@
+% node(X,Y,R) :- node(Y,X,R)
+R=node(node(X,Y),Z) :- R=node(X,node(Y,Z))

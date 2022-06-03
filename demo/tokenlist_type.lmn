@@ -1,0 +1,18 @@
+% トークン1,2,...,nがこの順に出現するようなリストは次の型で表現できる（空いている場所は0とする）
+defshape tokenList(R){
+  R=tokenList :- $n >= 0 | R=tokenList($n,1).
+  R=tokenList($n,$k) :- R=c(0,tokenList($n,$k)).
+  R=tokenList($n,$k) :- $n>=$k, $k1=$k+1 | R=c($k,tokenList($n,$k1)).
+  R=tokenList($n,$k) :- $n<$k | R=nil.
+} nonterminal {
+  tokenList(R), tokenList($n,R)
+}
+
+% defshape tokenList(R){
+%   R=tokenList :- $n >= 0 | R=tokenList($n,1).
+%   R=tokenList($n,$k) :- R=c(none,tokenList($n,$k)).
+%   R=tokenList($n,$k) :- $n>=$k, $k1=$k+1 | R=c(some($k),tokenList($n,$k1)).
+%   R=tokenList($n,$k) :- $n<$k | R=nil.
+% } nonterminal {
+%   tokenList(R), tokenList($n,R)
+% }

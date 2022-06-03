@@ -1,0 +1,3 @@
+c(c(L),R) :- c(c(c(c(L))),R)
+
+% c(XL,XR), c(YL,YR) :- c(c(XL),XR), c(c(YL),YR).
