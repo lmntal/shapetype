@@ -1,6 +1,8 @@
 # LMNtal ShapeType
 This repository contains the prototype implementation of LMNtal ShapeType, a static type checking framework for a graph rewriting language LMNtal, which we presented in the paper "Engineering Grammar-based Type Checking for Graph Rewriting Languages".
 
+The proofs for the theorems, lemmas and propositions in the paper can be found in [this repository](https://github.com/lmntal/shapetype-proofs).
+
 ## Preliminary
 To run the prototype, you need to install Node.js and its package manager `npm`.
 Also, you need to install z3py as an SMT-solver to handle numeric constraints on indexed types.
